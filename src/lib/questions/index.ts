@@ -1,5 +1,5 @@
-export type { Question } from "./types";
-export { type Grade, checkAnswer } from "./types";
+export type { Question, Grade } from "./types";
+export { checkAnswer } from "./types";
 import { Question, Grade } from "./types";
 import { get6emeQuestions, get5emeQuestions, get4emeQuestions } from "./grades";
 import { get3emeQuestions } from "./3eme";
