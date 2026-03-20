@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { getDuelQuestion, checkAnswer, Question, Grade } from "@/lib/questions";
+import { getDuelQuestion, checkAnswer } from "@/lib/questions";
+import type { Question, Grade } from "@/lib/questions";
 
 const DuelScreen: React.FC<{ onBack: () => void; grade: Grade }> = ({ onBack, grade }) => {
   const [scores, setScores] = useState([0, 0]);

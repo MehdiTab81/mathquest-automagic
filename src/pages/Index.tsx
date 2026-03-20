@@ -4,7 +4,8 @@ import MenuScreen from "@/components/game/MenuScreen";
 import QuizScreen from "@/components/game/QuizScreen";
 import ResultsScreen from "@/components/game/ResultsScreen";
 import DuelScreen from "@/components/game/DuelScreen";
-import { getRandomQuestions, Question, Grade } from "@/lib/questions";
+import { getRandomQuestions } from "@/lib/questions";
+import type { Question, Grade } from "@/lib/questions";
 
 type Screen = "menu" | "quiz" | "results" | "duel";
 type Mode = "free" | "exam" | "duel";
