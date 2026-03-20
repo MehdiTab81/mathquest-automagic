@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import Keypad from "./Keypad";
-import { Question, checkAnswer } from "@/lib/questions";
+import { checkAnswer } from "@/lib/questions";
+import type { Question } from "@/lib/questions";
 
 interface QuizScreenProps {
   question: Question;

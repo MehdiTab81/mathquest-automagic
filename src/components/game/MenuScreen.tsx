@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grade } from "@/lib/questions";
+import type { Grade } from "@/lib/questions";
 
 type Mode = "free" | "exam" | "duel";
 
