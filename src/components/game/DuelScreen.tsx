@@ -33,7 +33,7 @@ const DuelScreen: React.FC<{ onBack: () => void; grade: Grade }> = ({ onBack, gr
         setWinner(newScores[0] >= newScores[1] ? 0 : 1);
       } else {
         setRound(r => r + 1);
-        setQuestion(getDuelQuestion());
+        setQuestion(getDuelQuestion(grade));
         setInputs(["", ""]);
       }
     } else {
