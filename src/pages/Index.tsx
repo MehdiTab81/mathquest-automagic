@@ -4,17 +4,18 @@ import MenuScreen from "@/components/game/MenuScreen";
 import QuizScreen from "@/components/game/QuizScreen";
 import ResultsScreen from "@/components/game/ResultsScreen";
 import DuelScreen from "@/components/game/DuelScreen";
-import { getRandomQuestions, Question } from "@/lib/questions";
+import { getRandomQuestions, Question, Grade } from "@/lib/questions";
 
 type Screen = "menu" | "quiz" | "results" | "duel";
 type Mode = "free" | "exam" | "duel";
 
-const EXAM_DURATION = 9 * 60; // 9 minutes in seconds
+const EXAM_DURATION = 9 * 60;
 const QUESTIONS_PER_SESSION = 12;
 
 const Index: React.FC = () => {
   const [screen, setScreen] = useState<Screen>("menu");
   const [mode, setMode] = useState<Mode>("free");
+  const [grade, setGrade] = useState<Grade>("6eme");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -24,14 +25,15 @@ const Index: React.FC = () => {
   const [timer, setTimer] = useState(EXAM_DURATION);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
 
-  const startQuiz = useCallback((m: Mode) => {
+  const startQuiz = useCallback((m: Mode, g: Grade) => {
+    setGrade(g);
     if (m === "duel") {
       setMode("duel");
       setScreen("duel");
       return;
     }
     setMode(m);
-    setQuestions(getRandomQuestions(QUESTIONS_PER_SESSION));
+    setQuestions(getRandomQuestions(QUESTIONS_PER_SESSION, g));
     setCurrentQ(0);
     setCorrect(0);
     setTimes([]);
@@ -39,7 +41,6 @@ const Index: React.FC = () => {
     setScreen("quiz");
   }, []);
 
-  // Exam timer
   useEffect(() => {
     if (screen === "quiz" && mode === "exam") {
       timerRef.current = setInterval(() => {
@@ -96,13 +97,12 @@ const Index: React.FC = () => {
   const avgTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.filter(t => t > 0).length : 0;
 
   if (screen === "duel") {
-    return <DuelScreen onBack={() => setScreen("menu")} />;
+    return <DuelScreen onBack={() => setScreen("menu")} grade={grade} />;
   }
 
   return (
     <div className="min-h-screen relative">
       <div className="max-w-[600px] mx-auto px-4 py-4">
-        {/* Header */}
         <header className="text-center py-5 animate-fade-in">
           <h1 className="text-4xl font-black tracking-tight leading-none">
             <span className="text-game-gold">Math</span>
@@ -113,14 +113,12 @@ const Index: React.FC = () => {
           </p>
         </header>
 
-        {/* HUD */}
         <HUD
           level={level}
           xpPercent={xp}
           timer={screen === "quiz" && mode === "exam" ? formatTimer(timer) : undefined}
         />
 
-        {/* Screens */}
         {screen === "menu" && <MenuScreen onSelectMode={startQuiz} />}
 
         {screen === "quiz" && questions[currentQ] && (
