@@ -45,10 +45,17 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
   return (
     <div className="animate-fade-in space-y-4">
       <div className={`bg-card rounded-lg p-5 border border-foreground/10 ${shake ? "animate-shake" : ""}`}>
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            {question.category}
-          </span>
+        <div className="flex justify-between items-start mb-3 gap-3">
+          <div>
+            <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              {question.category}
+            </span>
+            {question.id !== undefined && (
+              <span className="mt-1 block font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+                Question #{question.id}
+              </span>
+            )}
+          </div>
           <span className="font-mono text-xs text-muted-foreground">
             {questionIndex + 1}/{totalQuestions}
           </span>
