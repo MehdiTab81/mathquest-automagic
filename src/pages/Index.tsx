@@ -1,68 +1,33 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import HUD from "@/components/game/HUD";
 import MenuScreen from "@/components/game/MenuScreen";
 import QuizScreen from "@/components/game/QuizScreen";
 import ResultsScreen from "@/components/game/ResultsScreen";
-import DuelScreen from "@/components/game/DuelScreen";
-import { getRandomQuestions } from "@/lib/questions";
-import type { Question, Grade } from "@/lib/questions";
+import { getRandomQuestions, getQuestionsByCategory } from "@/lib/questions";
+import type { Question } from "@/lib/questions";
 
-type Screen = "menu" | "quiz" | "results" | "duel";
-type Mode = "free" | "exam" | "duel";
-
-const EXAM_DURATION = 9 * 60;
-const QUESTIONS_PER_SESSION = 12;
+type Screen = "menu" | "quiz" | "results";
 
 const Index: React.FC = () => {
   const [screen, setScreen] = useState<Screen>("menu");
-  const [mode, setMode] = useState<Mode>("free");
-  const [grade, setGrade] = useState<Grade>("6eme");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [times, setTimes] = useState<number[]>([]);
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
-  const [timer, setTimer] = useState(EXAM_DURATION);
-  const timerRef = useRef<ReturnType<typeof setInterval>>();
 
-  const startQuiz = useCallback((m: Mode, g: Grade) => {
-    setGrade(g);
-    if (m === "duel") {
-      setMode("duel");
-      setScreen("duel");
-      return;
+  const startQuiz = useCallback((category: string | null) => {
+    if (category) {
+      setQuestions(getQuestionsByCategory(category));
+    } else {
+      setQuestions(getRandomQuestions(20));
     }
-    setMode(m);
-    setQuestions(getRandomQuestions(QUESTIONS_PER_SESSION, g));
     setCurrentQ(0);
     setCorrect(0);
     setTimes([]);
-    setTimer(EXAM_DURATION);
     setScreen("quiz");
   }, []);
-
-  useEffect(() => {
-    if (screen === "quiz" && mode === "exam") {
-      timerRef.current = setInterval(() => {
-        setTimer(prev => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current);
-            setScreen("results");
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-      return () => clearInterval(timerRef.current);
-    }
-  }, [screen, mode]);
-
-  const formatTimer = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  };
 
   const handleAnswer = useCallback((isCorrect: boolean, timeMs: number) => {
     if (isCorrect) {
@@ -78,7 +43,6 @@ const Index: React.FC = () => {
     }
     setTimes(prev => [...prev, timeMs]);
     if (currentQ + 1 >= questions.length) {
-      clearInterval(timerRef.current);
       setScreen("results");
     } else {
       setCurrentQ(prev => prev + 1);
@@ -88,7 +52,6 @@ const Index: React.FC = () => {
   const handleSkip = useCallback(() => {
     setTimes(prev => [...prev, 0]);
     if (currentQ + 1 >= questions.length) {
-      clearInterval(timerRef.current);
       setScreen("results");
     } else {
       setCurrentQ(prev => prev + 1);
@@ -96,10 +59,6 @@ const Index: React.FC = () => {
   }, [currentQ, questions.length]);
 
   const avgTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.filter(t => t > 0).length : 0;
-
-  if (screen === "duel") {
-    return <DuelScreen onBack={() => setScreen("menu")} grade={grade} />;
-  }
 
   return (
     <div className="min-h-screen relative">
@@ -110,17 +69,16 @@ const Index: React.FC = () => {
             <span className="text-game-teal">Quest</span>
           </h1>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mt-1 font-bold">
-            Édition Automatismes
+            Automatismes · 3ème
           </p>
         </header>
 
         <HUD
           level={level}
           xpPercent={xp}
-          timer={screen === "quiz" && mode === "exam" ? formatTimer(timer) : undefined}
         />
 
-        {screen === "menu" && <MenuScreen onSelectMode={startQuiz} />}
+        {screen === "menu" && <MenuScreen onSelectCategory={startQuiz} />}
 
         {screen === "quiz" && questions[currentQ] && (
           <QuizScreen
