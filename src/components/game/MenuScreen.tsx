@@ -1,83 +1,84 @@
-import React, { useState } from "react";
-import type { Grade } from "@/lib/questions";
+import React from "react";
+import { getCategories } from "@/lib/questions";
 
-type Mode = "free" | "exam" | "duel";
+/** Groupes thématiques pour organiser les catégories */
+const THEME_GROUPS: { theme: string; emoji: string; prefixes: string[] }[] = [
+  { theme: "Nombres & Calculs", emoji: "🔢", prefixes: ["Relatifs", "Fraction", "Quotients", "Add/sub frac", "Multiplier rat", "Diviser rat", "Écritures", "Puissances", "Notation sci", "Carrés", "Racines", "Encadrer", "Double,", "Tables", "Priorités", "PGCD"] },
+  { theme: "Algèbre & Équations", emoji: "✏️", prefixes: ["Distributivité", "Double dist", "Identité", "Différence", "Programme de calcul", "Substitution", "Équation"] },
+  { theme: "Fonctions", emoji: "📈", prefixes: ["Fonction"] },
+  { theme: "Proportionnalité & %", emoji: "⚖️", prefixes: ["Pourcentage", "Augmentation", "Proportionnalité", "Partage", "Vitesse", "Probabilité", "Événement"] },
+  { theme: "Géométrie & Mesures", emoji: "📐", prefixes: ["Pythagore", "Somme angles", "Angles comp", "Périmètres", "Aires", "Volumes", "Conversions"] },
+  { theme: "Statistiques", emoji: "📊", prefixes: ["Moyenne", "Médiane", "Étendue"] },
+  { theme: "Brevet", emoji: "🎓", prefixes: ["Brevet"] },
+];
 
-interface MenuScreenProps {
-  onSelectMode: (mode: Mode, grade: Grade) => void;
+function getThemeForCategory(cat: string): string {
+  for (const g of THEME_GROUPS) {
+    if (g.prefixes.some(p => cat.startsWith(p))) return g.theme;
+  }
+  return "Autres";
 }
 
-const grades: { value: Grade; label: string; desc: string }[] = [
-  { value: "6eme", label: "6ème", desc: "CM1 / CM2" },
-  { value: "5eme", label: "5ème", desc: "6ème et avant" },
-  { value: "4eme", label: "4ème", desc: "5ème et avant" },
-  { value: "3eme", label: "3ème", desc: "4ème et avant" },
-];
+interface MenuScreenProps {
+  onSelectCategory: (category: string | null) => void;
+}
 
-const modes: { mode: Mode; emoji: string; label: string; desc: string }[] = [
-  { mode: "free", emoji: "🏋️", label: "ENTRAÎNEMENT LIBRE", desc: "Sans limite de temps" },
-  { mode: "exam", emoji: "⏱️", label: "MODE EXAMEN", desc: "9 minutes chrono" },
-  { mode: "duel", emoji: "⚔️", label: "MODE DUEL", desc: "2 joueurs, face à face" },
-];
+const MenuScreen: React.FC<MenuScreenProps> = ({ onSelectCategory }) => {
+  const categories = getCategories();
 
-const MenuScreen: React.FC<MenuScreenProps> = ({ onSelectMode }) => {
-  const [selectedGrade, setSelectedGrade] = useState<Grade | null>(null);
-
-  if (!selectedGrade) {
-    return (
-      <div className="animate-fade-in space-y-3">
-        <p className="text-center text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
-          Choisis ton niveau
-        </p>
-        {grades.map((g, i) => (
-          <button
-            key={g.value}
-            onClick={() => setSelectedGrade(g.value)}
-            className="w-full bg-card border border-foreground/5 rounded-lg p-5 text-left
-              transition-all duration-200 hover:border-primary/30 hover:shadow-[0_0_20px_hsl(var(--game-gold)/0.08)]
-              active:scale-[0.97] group"
-            style={{ animationDelay: `${i * 80}ms` }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-black text-lg tracking-wide">{g.label}</div>
-                <div className="text-sm text-muted-foreground">Notions : {g.desc}</div>
-              </div>
-              <span className="text-muted-foreground text-xl group-hover:translate-x-1 transition-transform">→</span>
-            </div>
-          </button>
-        ))}
-      </div>
-    );
-  }
+  // Group categories by theme
+  const grouped = new Map<string, { name: string; count: number }[]>();
+  categories.forEach(c => {
+    const theme = getThemeForCategory(c.name);
+    if (!grouped.has(theme)) grouped.set(theme, []);
+    grouped.get(theme)!.push(c);
+  });
 
   return (
-    <div className="animate-fade-in space-y-3">
+    <div className="animate-fade-in space-y-5">
+      {/* Tout mélangé */}
       <button
-        onClick={() => setSelectedGrade(null)}
-        className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-2 flex items-center gap-1"
+        onClick={() => onSelectCategory(null)}
+        className="w-full bg-primary/10 border-2 border-primary/30 rounded-lg p-5 text-left
+          transition-all duration-200 hover:border-primary/60 hover:shadow-[0_0_20px_hsl(var(--game-gold)/0.12)]
+          active:scale-[0.97] group"
       >
-        ← {grades.find(g => g.value === selectedGrade)?.label}
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🎲</span>
+          <div>
+            <div className="font-black text-base tracking-wide">TOUTES LES NOTIONS</div>
+            <div className="text-sm text-muted-foreground">{categories.reduce((s, c) => s + c.count, 0)} questions mélangées</div>
+          </div>
+        </div>
       </button>
 
-      {modes.map((m, i) => (
-        <button
-          key={m.mode}
-          onClick={() => onSelectMode(m.mode, selectedGrade)}
-          className="w-full bg-card border border-foreground/5 rounded-lg p-5 text-left
-            transition-all duration-200 hover:border-primary/30 hover:shadow-[0_0_20px_hsl(var(--game-gold)/0.08)]
-            active:scale-[0.97] group"
-          style={{ animationDelay: `${i * 80}ms` }}
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">{m.emoji}</span>
-            <div>
-              <div className="font-black text-base tracking-wide">{m.label}</div>
-              <div className="text-sm text-muted-foreground">{m.desc}</div>
+      {/* Par thème */}
+      {THEME_GROUPS.map(group => {
+        const cats = grouped.get(group.theme);
+        if (!cats || cats.length === 0) return null;
+        return (
+          <div key={group.theme}>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2 flex items-center gap-2">
+              <span>{group.emoji}</span> {group.theme}
+            </p>
+            <div className="space-y-1.5">
+              {cats.map(c => (
+                <button
+                  key={c.name}
+                  onClick={() => onSelectCategory(c.name)}
+                  className="w-full bg-card border border-foreground/5 rounded-lg px-4 py-3 text-left
+                    transition-all duration-200 hover:border-primary/30 active:scale-[0.97] group"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-bold">{c.name}</span>
+                    <span className="font-mono text-xs text-muted-foreground">{c.count}q</span>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
-        </button>
-      ))}
+        );
+      })}
     </div>
   );
 };
