@@ -684,9 +684,8 @@ export function get3emeQuestions(): Question[] {
   // ── Brevet 2025 – Amérique du Sud ─────────────────────────
   qs.push({ text: "Triangle rectangle en A : AB = 10, BC = 20. Angle ABC ?", answer: "60", category: "Brevet – Trigonométrie", hint: "cos(ABC) = 10/20 = 0,5 → 60°" });
   qs.push({ text: "Urne 12 jetons (1 à 12). Proba d'un nombre ≤ 5 ?", answer: "0.417", category: "Brevet – Probabilités", hint: "5/12 ≈ 0,417" });
-  qs.push({ text: "f(x) = −2x. Image de 2 ?", answer: "-3", category: "Brevet – Fonctions" });
-  // correction: f(2) = -2×2 = -4... let me fix
-  qs.push({ text: "f(x) image de −1 par f(x) = −2x ?", answer: "2", category: "Brevet – Fonctions", hint: "−2 × (−1) = 2" });
+  qs.push({ text: "f(x) = −2x. f(2) = ?", answer: "-4", category: "Brevet – Fonctions", hint: "−2 × 2 = −4" });
+  qs.push({ text: "f(x) = −2x. f(−1) = ?", answer: "2", category: "Brevet – Fonctions", hint: "−2 × (−1) = 2" });
 
   // ── Brevet 2025 – Nouvelle-Calédonie (QCM) ────────────────
   qs.push({ text: "Vitesse moyenne : 6 980 km en 9 h. Arrondi à la centaine ?", answer: "800", category: "Brevet – Vitesse", hint: "6980/9 ≈ 775,6 → 800 km/h" });
