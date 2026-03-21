@@ -80,6 +80,9 @@ const DuelScreen: React.FC<{ onBack: () => void; grade: Grade }> = ({ onBack, gr
       {/* Player 2 — rotated 180° */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 rotate-180">
         <p className="font-bold text-sm mb-1">Joueur 2 : {scores[1]}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
+          {question.id !== undefined ? `Question #${question.id}` : `Manche ${round}/${maxRounds}`}
+        </p>
         <p className="font-mono text-lg font-black mb-2">{question.text} = ?</p>
         <div className="font-mono text-xl bg-foreground/5 rounded-lg px-4 py-2 mb-3 min-w-[120px] text-center">
           {inputs[1] || "?"}
@@ -92,6 +95,9 @@ const DuelScreen: React.FC<{ onBack: () => void; grade: Grade }> = ({ onBack, gr
       {/* Player 1 */}
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <p className="font-bold text-sm mb-1">Joueur 1 : {scores[0]}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
+          {question.id !== undefined ? `Question #${question.id}` : `Manche ${round}/${maxRounds}`}
+        </p>
         <p className="font-mono text-lg font-black mb-2">{question.text} = ?</p>
         <div className="font-mono text-xl bg-foreground/5 rounded-lg px-4 py-2 mb-3 min-w-[120px] text-center">
           {inputs[0] || "?"}
