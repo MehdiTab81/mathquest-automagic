@@ -5,14 +5,15 @@ import QuizScreen from "@/components/game/QuizScreen";
 import ResultsScreen from "@/components/game/ResultsScreen";
 import DuelScreen from "@/components/game/DuelScreen";
 import { getRandomQuestions, getQuestionsByCategory } from "@/lib/questions";
-import type { Question } from "@/lib/questions";
+import type { Question, Grade } from "@/lib/questions";
 
 type Screen = "menu" | "quiz" | "results" | "duel";
 
-const EXAM_DURATION_S = 9 * 60; // 9 minutes
+const EXAM_DURATION_S = 9 * 60;
 
 const Index: React.FC = () => {
   const [screen, setScreen] = useState<Screen>("menu");
+  const [grade, setGrade] = useState<Grade>("3eme");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -23,7 +24,6 @@ const Index: React.FC = () => {
   const [timerLeft, setTimerLeft] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Timer logic for exam mode
   useEffect(() => {
     if (screen === "quiz" && isExam && timerLeft > 0) {
       timerRef.current = setInterval(() => {
@@ -48,22 +48,22 @@ const Index: React.FC = () => {
 
   const startTraining = useCallback((category: string | null) => {
     setIsExam(false);
-    setQuestions(category ? getQuestionsByCategory(category) : getRandomQuestions(20));
+    setQuestions(category ? getQuestionsByCategory(category, grade) : getRandomQuestions(20, grade));
     setCurrentQ(0);
     setCorrect(0);
     setTimes([]);
     setScreen("quiz");
-  }, []);
+  }, [grade]);
 
   const startExam = useCallback(() => {
     setIsExam(true);
-    setQuestions(getRandomQuestions(20));
+    setQuestions(getRandomQuestions(20, grade));
     setCurrentQ(0);
     setCorrect(0);
     setTimes([]);
     setTimerLeft(EXAM_DURATION_S);
     setScreen("quiz");
-  }, []);
+  }, [grade]);
 
   const startDuel = useCallback(() => {
     setScreen("duel");
@@ -106,7 +106,7 @@ const Index: React.FC = () => {
   }, []);
 
   if (screen === "duel") {
-    return <DuelScreen onBack={goHome} />;
+    return <DuelScreen grade={grade} onBack={goHome} />;
   }
 
   const avgTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.filter(t => t > 0).length : 0;
@@ -120,7 +120,7 @@ const Index: React.FC = () => {
             <span className="text-game-teal">Quest</span>
           </h1>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mt-1 font-bold">
-            Automatismes · 3ème
+            Automatismes · {grade === "4eme" ? "4ème" : "3ème"}
           </p>
         </header>
 
@@ -132,6 +132,8 @@ const Index: React.FC = () => {
 
         {screen === "menu" && (
           <MenuScreen
+            grade={grade}
+            onGradeChange={setGrade}
             onStartTraining={startTraining}
             onStartExam={startExam}
             onStartDuel={startDuel}

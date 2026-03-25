@@ -1,13 +1,19 @@
 import React, { useState, useCallback } from "react";
 import { getDuelQuestion, checkAnswer } from "@/lib/questions";
-import type { Question } from "@/lib/questions";
+import type { Question, Grade } from "@/lib/questions";
 
-const DuelScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
+interface DuelScreenProps {
+  grade: Grade;
+  onBack: () => void;
+}
+
+const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
   const [scores, setScores] = useState([0, 0]);
-  const [question, setQuestion] = useState<Question>(getDuelQuestion());
+  const [question, setQuestion] = useState<Question>(() => getDuelQuestion(grade));
   const [inputs, setInputs] = useState(["", ""]);
   const [winner, setWinner] = useState<number | null>(null);
   const [round, setRound] = useState(1);
+  const [feedback, setFeedback] = useState<[string, string]>(["", ""]);
   const maxRounds = 10;
 
   const handleKey = useCallback((player: number, key: string) => {
@@ -16,6 +22,12 @@ const DuelScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       const next = [...prev];
       if (key === "del") {
         next[player] = next[player].slice(0, -1);
+      } else if (key === "±") {
+        next[player] = next[player].startsWith("-") ? next[player].slice(1) : "-" + next[player];
+      } else if (key === "," || key === ".") {
+        if (!next[player].includes(".") && !next[player].includes(",")) {
+          next[player] = next[player] + ".";
+        }
       } else {
         next[player] = next[player] + key;
       }
@@ -29,27 +41,50 @@ const DuelScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
       const newScores = [...scores];
       newScores[player]++;
       setScores(newScores);
+      setFeedback(prev => {
+        const next = [...prev] as [string, string];
+        next[player] = "✅";
+        return next;
+      });
 
-      if (round >= maxRounds) {
-        setWinner(newScores[0] >= newScores[1] ? 0 : 1);
-      } else {
-        setRound(r => r + 1);
-        setQuestion(getDuelQuestion());
-        setInputs(["", ""]);
-      }
+      setTimeout(() => {
+        if (round >= maxRounds) {
+          setWinner(newScores[0] >= newScores[1] ? 0 : 1);
+        } else {
+          setRound(r => r + 1);
+          setQuestion(getDuelQuestion(grade));
+          setInputs(["", ""]);
+          setFeedback(["", ""]);
+        }
+      }, 600);
     } else {
+      setFeedback(prev => {
+        const next = [...prev] as [string, string];
+        next[player] = "❌";
+        return next;
+      });
       setInputs(prev => {
         const next = [...prev];
         next[player] = "";
         return next;
       });
+      setTimeout(() => {
+        setFeedback(prev => {
+          const next = [...prev] as [string, string];
+          next[player] = "";
+          return next;
+        });
+      }, 800);
     }
-  }, [inputs, question, scores, round, winner]);
+  }, [inputs, question, scores, round, winner, grade]);
 
   if (winner !== null) {
+    const tie = scores[0] === scores[1];
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 animate-fade-in">
-        <h2 className="text-3xl font-black mb-4">🏆 Joueur {winner + 1} gagne !</h2>
+        <h2 className="text-3xl font-black mb-4">
+          {tie ? "🤝 Égalité !" : `🏆 Joueur ${winner + 1} gagne !`}
+        </h2>
         <p className="font-mono text-xl mb-6">{scores[0]} — {scores[1]}</p>
         <button onClick={onBack} className="bg-primary text-primary-foreground font-black py-4 px-8 rounded-full active:scale-[0.97]">
           🏠 RETOUR
@@ -59,17 +94,18 @@ const DuelScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   }
 
   const MiniKeypad = ({ player }: { player: number }) => (
-    <div className="grid grid-cols-3 gap-1.5 w-full max-w-[200px]">
-      {["7","8","9","4","5","6","1","2","3","0","del","✓"].map(k => (
+    <div className="grid grid-cols-4 gap-1 w-full max-w-[220px]">
+      {["7","8","9","±","4","5","6",",","1","2","3","/","0","del",".",  "✓"].map(k => (
         <button
           key={k}
           onClick={() => k === "✓" ? handleSubmit(player) : handleKey(player, k)}
-          className={`py-3 rounded-lg font-mono font-bold text-sm transition-all active:scale-90
+          className={`py-2.5 rounded-lg font-mono font-bold text-sm transition-all active:scale-90
             ${k === "del" ? "bg-destructive/20 text-destructive" :
               k === "✓" ? "bg-game-mint text-background" :
+              k === "±" || k === "," || k === "." || k === "/" ? "bg-secondary/20 text-secondary" :
               "bg-foreground/5 text-foreground"}`}
         >
-          {k === "del" ? "⌫" : k}
+          {k === "del" ? "⌫" : k === "±" ? "±" : k}
         </button>
       ))}
     </div>
@@ -79,9 +115,9 @@ const DuelScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     <div className="min-h-screen flex flex-col">
       {/* Player 2 — rotated 180° */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 rotate-180">
-        <p className="font-bold text-sm mb-1">Joueur 2 : {scores[1]}</p>
+        <p className="font-bold text-sm mb-1">Joueur 2 : {scores[1]} {feedback[1]}</p>
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          {question.id !== undefined ? `Question #${question.id}` : `Manche ${round}/${maxRounds}`}
+          Manche {round}/{maxRounds}
         </p>
         <p className="font-mono text-lg font-black mb-2">{question.text} = ?</p>
         <div className="font-mono text-xl bg-foreground/5 rounded-lg px-4 py-2 mb-3 min-w-[120px] text-center">
@@ -94,9 +130,9 @@ const DuelScreen: React.FC<{ onBack: () => void }> = ({ onBack }) => {
 
       {/* Player 1 */}
       <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <p className="font-bold text-sm mb-1">Joueur 1 : {scores[0]}</p>
+        <p className="font-bold text-sm mb-1">Joueur 1 : {scores[0]} {feedback[0]}</p>
         <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground mb-2">
-          {question.id !== undefined ? `Question #${question.id}` : `Manche ${round}/${maxRounds}`}
+          Manche {round}/{maxRounds}
         </p>
         <p className="font-mono text-lg font-black mb-2">{question.text} = ?</p>
         <div className="font-mono text-xl bg-foreground/5 rounded-lg px-4 py-2 mb-3 min-w-[120px] text-center">

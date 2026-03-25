@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { getCategories } from "@/lib/questions";
+import type { Grade } from "@/lib/questions";
 
-const THEME_GROUPS: { theme: string; emoji: string; prefixes: string[] }[] = [
+const THEME_GROUPS_3EME: { theme: string; emoji: string; prefixes: string[] }[] = [
   { theme: "Nombres & Calculs", emoji: "🔢", prefixes: ["Relatifs", "Fraction", "Quotients", "Add/sub frac", "Multiplier rat", "Diviser rat", "Écritures", "Puissances", "Notation sci", "Carrés", "Racines", "Encadrer", "Double,", "Tables", "Priorités", "PGCD"] },
   { theme: "Algèbre & Équations", emoji: "✏️", prefixes: ["Distributivité", "Double dist", "Identité", "Différence", "Programme de calcul", "Substitution", "Équation"] },
   { theme: "Fonctions", emoji: "📈", prefixes: ["Fonction"] },
@@ -11,32 +12,61 @@ const THEME_GROUPS: { theme: string; emoji: string; prefixes: string[] }[] = [
   { theme: "Brevet", emoji: "🎓", prefixes: ["Brevet"] },
 ];
 
-function getThemeForCategory(cat: string): string {
-  for (const g of THEME_GROUPS) {
+const THEME_GROUPS_4EME: { theme: string; emoji: string; prefixes: string[] }[] = [
+  { theme: "Nombres & Calculs", emoji: "🔢", prefixes: ["Relatifs", "Fraction", "Quotients", "Add/sub frac", "Multiplier rat", "Diviser rat", "Écritures", "Puissances", "Carrés", "Double,", "Tables", "Priorités"] },
+  { theme: "Algèbre & Équations", emoji: "✏️", prefixes: ["Distributivité", "Programme de calcul", "Substitution", "Équation"] },
+  { theme: "Proportionnalité & %", emoji: "⚖️", prefixes: ["Pourcentage", "Augmentation", "Proportionnalité", "Partage", "Vitesse"] },
+  { theme: "Géométrie & Mesures", emoji: "📐", prefixes: ["Pythagore", "Somme angles", "Angles comp", "Périmètres", "Aires", "Volumes", "Conversions"] },
+  { theme: "Statistiques", emoji: "📊", prefixes: ["Moyenne", "Médiane", "Étendue"] },
+];
+
+function getThemeForCategory(cat: string, grade: Grade): string {
+  const groups = grade === "3eme" ? THEME_GROUPS_3EME : THEME_GROUPS_4EME;
+  for (const g of groups) {
     if (g.prefixes.some(p => cat.startsWith(p))) return g.theme;
   }
   return "Autres";
 }
 
 interface MenuScreenProps {
+  grade: Grade;
+  onGradeChange: (grade: Grade) => void;
   onStartTraining: (category: string | null) => void;
   onStartExam: () => void;
   onStartDuel: () => void;
 }
 
-const MenuScreen: React.FC<MenuScreenProps> = ({ onStartTraining, onStartExam, onStartDuel }) => {
+const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel }) => {
   const [showCategories, setShowCategories] = useState(false);
-  const categories = getCategories();
+  const categories = getCategories(grade);
+  const themeGroups = grade === "3eme" ? THEME_GROUPS_3EME : THEME_GROUPS_4EME;
 
   const grouped = new Map<string, { name: string; count: number }[]>();
   categories.forEach(c => {
-    const theme = getThemeForCategory(c.name);
+    const theme = getThemeForCategory(c.name, grade);
     if (!grouped.has(theme)) grouped.set(theme, []);
     grouped.get(theme)!.push(c);
   });
 
   return (
     <div className="animate-fade-in space-y-4">
+      {/* Grade Selector */}
+      <div className="flex gap-2 p-1 bg-card rounded-xl border border-foreground/5">
+        {(["4eme", "3eme"] as Grade[]).map(g => (
+          <button
+            key={g}
+            onClick={() => onGradeChange(g)}
+            className={`flex-1 py-3 rounded-lg font-black text-sm tracking-wide transition-all duration-200
+              ${grade === g
+                ? "bg-primary text-primary-foreground shadow-md"
+                : "text-muted-foreground hover:text-foreground"
+              }`}
+          >
+            {g === "4eme" ? "4ème" : "3ème"}
+          </button>
+        ))}
+      </div>
+
       {/* 3 Modes */}
       <div className="space-y-3">
         <button
@@ -100,7 +130,7 @@ const MenuScreen: React.FC<MenuScreenProps> = ({ onStartTraining, onStartExam, o
             </div>
           </button>
 
-          {THEME_GROUPS.map(group => {
+          {themeGroups.map(group => {
             const cats = grouped.get(group.theme);
             if (!cats || cats.length === 0) return null;
             return (
