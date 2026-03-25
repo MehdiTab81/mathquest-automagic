@@ -3,6 +3,25 @@ import Keypad from "./Keypad";
 import { checkAnswer } from "@/lib/questions";
 import type { Question } from "@/lib/questions";
 
+/** Renders fraction patterns like "3/4" as horizontal fraction bars */
+function renderMathText(text: string): React.ReactNode {
+  // Split on fraction patterns: digits/digits (but not inside words)
+  const parts = text.split(/(\b\d+\/\d+\b)/g);
+  return parts.map((part, i) => {
+    const fractionMatch = part.match(/^(\d+)\/(\d+)$/);
+    if (fractionMatch) {
+      return (
+        <span key={i} className="inline-flex flex-col items-center mx-1 align-middle leading-none">
+          <span className="text-[0.7em] font-bold">{fractionMatch[1]}</span>
+          <span className="w-full h-[2px] bg-foreground rounded-full my-[1px]" />
+          <span className="text-[0.7em] font-bold">{fractionMatch[2]}</span>
+        </span>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 interface QuizScreenProps {
   question: Question;
   questionIndex: number;
@@ -18,8 +37,12 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
   const [startTime] = useState(Date.now());
 
   const handleKey = useCallback((key: string) => {
-    if (key === ",") {
-      if (!input.includes(",")) setInput(prev => prev + ",");
+    if (key === "±") {
+      setInput(prev => prev.startsWith("-") ? prev.slice(1) : "-" + prev);
+    } else if (key === ",") {
+      if (!input.includes(",") && !input.includes(".")) setInput(prev => prev + ",");
+    } else if (key === ".") {
+      if (!input.includes(",") && !input.includes(".")) setInput(prev => prev + ".");
     } else {
       setInput(prev => prev + key);
     }
@@ -60,7 +83,9 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
             {questionIndex + 1}/{totalQuestions}
           </span>
         </div>
-        <p className="text-2xl font-black text-center mb-4 leading-tight">{question.text} = ?</p>
+        <p className="text-2xl font-black text-center mb-4 leading-tight flex items-center justify-center flex-wrap gap-1">
+          {renderMathText(question.text)} <span>= ?</span>
+        </p>
         <input
           type="text"
           readOnly
