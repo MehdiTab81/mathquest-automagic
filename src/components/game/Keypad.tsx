@@ -4,27 +4,19 @@ interface KeypadProps {
   onKey: (key: string) => void;
   onDelete: () => void;
   onValidate: () => void;
-  showOperators?: boolean;
 }
 
-const Keypad: React.FC<KeypadProps> = ({ onKey, onDelete, onValidate, showOperators = true }) => {
-  const rows = showOperators
-    ? [
-        [{ l: "7" }, { l: "8" }, { l: "9" }, { l: "/", cls: "text-secondary" }],
-        [{ l: "4" }, { l: "5" }, { l: "6" }, { l: "×", cls: "text-secondary" }],
-        [{ l: "1" }, { l: "2" }, { l: "3" }, { l: "-", cls: "text-secondary" }],
-        [{ l: "0" }, { l: "," }, { l: "x²", cls: "text-secondary" }, { l: "+", cls: "text-secondary" }],
-      ]
-    : [
-        [{ l: "7" }, { l: "8" }, { l: "9" }],
-        [{ l: "4" }, { l: "5" }, { l: "6" }],
-        [{ l: "1" }, { l: "2" }, { l: "3" }],
-        [{ l: "0" }, { l: "," }, { l: "." }],
-      ];
+const Keypad: React.FC<KeypadProps> = ({ onKey, onDelete, onValidate }) => {
+  const rows = [
+    [{ l: "7" }, { l: "8" }, { l: "9" }, { l: "±", cls: "text-secondary" }],
+    [{ l: "4" }, { l: "5" }, { l: "6" }, { l: ",", cls: "text-secondary" }],
+    [{ l: "1" }, { l: "2" }, { l: "3" }, { l: ".", cls: "text-secondary" }],
+    [{ l: "0" }, { l: "00" }, { l: "/" }, { l: "-", cls: "text-secondary" }],
+  ];
 
   return (
     <div className="space-y-2">
-      <div className={`grid gap-2 ${showOperators ? "grid-cols-4" : "grid-cols-3"}`}>
+      <div className="grid grid-cols-4 gap-2">
         {rows.flat().map((k, i) => (
           <button
             key={i}
