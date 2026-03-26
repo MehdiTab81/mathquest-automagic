@@ -4,9 +4,10 @@ interface HUDProps {
   level: number;
   xpPercent: number;
   timer?: string;
+  timerWarning?: boolean;
 }
 
-const HUD: React.FC<HUDProps> = ({ level, xpPercent, timer }) => (
+const HUD: React.FC<HUDProps> = ({ level, xpPercent, timer, timerWarning }) => (
   <div className="flex items-center gap-3 bg-card rounded-lg p-3 mb-4 border border-foreground/5 animate-fade-in">
     <span className="font-mono font-bold text-sm text-game-gold">Niv.{level}</span>
     <div className="flex-1 bg-foreground/[0.07] rounded-full h-2.5 overflow-hidden">
@@ -15,7 +16,13 @@ const HUD: React.FC<HUDProps> = ({ level, xpPercent, timer }) => (
         style={{ width: `${xpPercent}%` }}
       />
     </div>
-    {timer && <span className="font-mono font-bold text-sm text-game-coral">{timer}</span>}
+    {timer && (
+      <span className={`font-mono font-bold text-sm transition-all ${
+        timerWarning ? "text-destructive animate-pulse scale-110" : "text-game-coral"
+      }`}>
+        {timer}
+      </span>
+    )}
   </div>
 );
 
