@@ -34,9 +34,10 @@ interface MenuScreenProps {
   onStartTraining: (category: string | null) => void;
   onStartExam: () => void;
   onStartDuel: () => void;
+  onStartBattle: () => void;
 }
 
-const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel }) => {
+const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel, onStartBattle }) => {
   const [showCategories, setShowCategories] = useState(false);
   const categories = getCategories(grade);
   const themeGroups = grade === "3eme" ? THEME_GROUPS_3EME : THEME_GROUPS_4EME;
@@ -108,6 +109,20 @@ const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTr
             <div>
               <div className="font-black text-base tracking-wide">DUEL 2 JOUEURS</div>
               <div className="text-xs text-muted-foreground">Affronte un ami sur le même écran</div>
+            </div>
+          </div>
+        </button>
+
+        <button
+          onClick={onStartBattle}
+          className="w-full bg-card border-2 border-game-purple/30 rounded-xl p-5 text-left
+            transition-all duration-200 hover:border-game-purple/60 active:scale-[0.97]"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">🏟️</span>
+            <div>
+              <div className="font-black text-base tracking-wide">BATTLE 4 JOUEURS</div>
+              <div className="text-xs text-muted-foreground">2-4 joueurs · Premier à 5 points gagne</div>
             </div>
           </div>
         </button>
