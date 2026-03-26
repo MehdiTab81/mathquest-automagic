@@ -15,96 +15,92 @@ const PLAYER_COLORS = [
   "text-game-coral",
   "text-game-purple",
 ];
+const PLAYER_BORDERS = [
+  "border-game-gold/30",
+  "border-game-teal/30",
+  "border-game-coral/30",
+  "border-game-purple/30",
+];
 
 const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
   const [phase, setPhase] = useState<"register" | "play" | "end">("register");
   const [names, setNames] = useState(["", "", "", ""]);
   const [scores, setScores] = useState([0, 0, 0, 0]);
   const [question, setQuestion] = useState<Question>(() => getDuelQuestion(grade));
-  const [inputs, setInputs] = useState(["", "", "", ""]);
-  const [feedback, setFeedback] = useState(["", "", "", ""]);
+  const [activePlayer, setActivePlayer] = useState<number | null>(null);
+  const [input, setInput] = useState("");
+  const [feedback, setFeedback] = useState<{ player: number; text: string } | null>(null);
   const [winner, setWinner] = useState<number | null>(null);
-  const [locked, setLocked] = useState(false);
+  const [questionNum, setQuestionNum] = useState(1);
+
+  const activePlayers = names.map((n, i) => ({ name: n, index: i })).filter(p => p.name.trim());
 
   const handleRegister = () => {
-    const filled = names.filter(n => n.trim());
-    if (filled.length < 2) return;
+    if (activePlayers.length < 2) return;
     setPhase("play");
   };
 
-  const handleKey = useCallback((player: number, key: string) => {
-    if (locked) return;
-    setInputs(prev => {
-      const next = [...prev];
-      if (key === "del") {
-        next[player] = next[player].slice(0, -1);
-      } else if (key === "±") {
-        next[player] = next[player].startsWith("-") ? next[player].slice(1) : "-" + next[player];
-      } else if (key === "," || key === ".") {
-        if (!next[player].includes(".") && !next[player].includes(",")) next[player] += ".";
-      } else {
-        next[player] += key;
-      }
-      return next;
-    });
-  }, [locked]);
+  const selectPlayer = (index: number) => {
+    if (feedback) return;
+    setActivePlayer(index);
+    setInput("");
+  };
 
-  const handleSubmit = useCallback((player: number) => {
-    if (locked || !inputs[player].trim()) return;
-    if (!names[player].trim()) return;
+  const handleKey = useCallback((key: string) => {
+    if (activePlayer === null || feedback) return;
+    if (key === "del") {
+      setInput(prev => prev.slice(0, -1));
+    } else if (key === "±") {
+      setInput(prev => prev.startsWith("-") ? prev.slice(1) : "-" + prev);
+    } else if (key === "," || key === ".") {
+      if (!input.includes(".") && !input.includes(",")) setInput(prev => prev + ".");
+    } else {
+      setInput(prev => prev + key);
+    }
+  }, [activePlayer, input, feedback]);
 
-    if (checkAnswer(inputs[player], question.answer)) {
-      setLocked(true);
+  const handleSubmit = useCallback(() => {
+    if (activePlayer === null || !input.trim() || feedback) return;
+
+    if (checkAnswer(input, question.answer)) {
       const newScores = [...scores];
-      newScores[player] += 1;
+      newScores[activePlayer] += 1;
       setScores(newScores);
-      setFeedback(prev => {
-        const next = [...prev];
-        next[player] = "✅ +1";
-        return next;
-      });
+      setFeedback({ player: activePlayer, text: `✅ ${names[activePlayer]} +1 point !` });
 
-      if (newScores[player] >= WINNING_SCORE) {
-        setWinner(player);
-        setPhase("end");
+      if (newScores[activePlayer] >= WINNING_SCORE) {
+        setTimeout(() => {
+          setWinner(activePlayer);
+          setPhase("end");
+        }, 1000);
         return;
       }
 
       setTimeout(() => {
         setQuestion(getDuelQuestion(grade));
-        setInputs(["", "", "", ""]);
-        setFeedback(["", "", "", ""]);
-        setLocked(false);
-      }, 800);
+        setInput("");
+        setActivePlayer(null);
+        setFeedback(null);
+        setQuestionNum(q => q + 1);
+      }, 1200);
     } else {
       const newScores = [...scores];
-      newScores[player] = Math.max(0, newScores[player] + WRONG_PENALTY);
+      newScores[activePlayer] = Math.max(0, newScores[activePlayer] + WRONG_PENALTY);
       setScores(newScores);
-      setFeedback(prev => {
-        const next = [...prev];
-        next[player] = `❌ ${WRONG_PENALTY}`;
-        return next;
-      });
-      setInputs(prev => {
-        const next = [...prev];
-        next[player] = "";
-        return next;
-      });
+      setFeedback({ player: activePlayer, text: `❌ ${names[activePlayer]} ${WRONG_PENALTY} pts` });
       setTimeout(() => {
-        setFeedback(prev => {
-          const next = [...prev];
-          next[player] = "";
-          return next;
-        });
-      }, 800);
+        setInput("");
+        setActivePlayer(null);
+        setFeedback(null);
+      }, 1200);
     }
-  }, [inputs, question, scores, locked, names, grade]);
+  }, [activePlayer, input, question, scores, names, grade, feedback]);
 
   // Registration phase
   if (phase === "register") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 animate-fade-in">
-        <h2 className="text-2xl font-black mb-1">⚔️ BATTLE MODE</h2>
+        <h2 className="text-2xl font-black mb-1">🏟️ BATTLE MODE</h2>
         <p className="text-sm text-muted-foreground mb-6">2 à 4 joueurs · Premier à {WINNING_SCORE} points</p>
         <div className="space-y-3 w-full max-w-xs mb-6">
           {names.map((name, i) => (
@@ -121,9 +117,17 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
             </div>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground mb-4">⚠️ Mauvaise réponse = {WRONG_PENALTY} points</p>
+        <div className="bg-accent/10 rounded-lg p-3 mb-4 text-xs text-center max-w-xs">
+          <p className="font-bold mb-1">📋 Règles</p>
+          <p>✅ Bonne réponse = <strong>+1 pt</strong></p>
+          <p>❌ Mauvaise réponse = <strong>{WRONG_PENALTY} pts</strong></p>
+          <p>🏆 Premier à <strong>{WINNING_SCORE} pts</strong> gagne</p>
+          <p className="mt-1 text-muted-foreground">Appuyez sur votre nom pour buzzer !</p>
+        </div>
         <button onClick={handleRegister}
-          className="bg-primary text-primary-foreground font-black py-3 px-8 rounded-full active:scale-[0.97]">
+          className="bg-primary text-primary-foreground font-black py-3 px-8 rounded-full active:scale-[0.97]
+            disabled:opacity-40"
+          disabled={activePlayers.length < 2}>
           🚀 LANCER LA BATTLE
         </button>
         <button onClick={onBack} className="mt-3 text-sm text-muted-foreground hover:text-foreground">
@@ -135,18 +139,20 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
 
   // End phase
   if (phase === "end" && winner !== null) {
+    const sorted = [...activePlayers].sort((a, b) => scores[b.index] - scores[a.index]);
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 animate-fade-in">
-        <h2 className="text-3xl font-black mb-2">🏆 {names[winner]} gagne !</h2>
-        <div className="space-y-2 mb-6">
-          {names.map((name, i) => name.trim() && (
-            <div key={i} className={`flex items-center gap-3 ${PLAYER_COLORS[i]}`}>
-              <span className="font-black text-sm w-16">{name}</span>
-              <span className="font-mono font-bold text-lg">{scores[i]} pts</span>
-              {i === winner && <span>👑</span>}
+        <h2 className="text-3xl font-black mb-4">🏆 {names[winner]} gagne !</h2>
+        <div className="space-y-3 mb-6 w-full max-w-xs">
+          {sorted.map((p, rank) => (
+            <div key={p.index} className={`flex items-center gap-3 p-3 rounded-lg bg-card border ${PLAYER_BORDERS[p.index]}`}>
+              <span className="text-xl font-black">{rank === 0 ? "🥇" : rank === 1 ? "🥈" : rank === 2 ? "🥉" : "4."}</span>
+              <span className={`font-black text-sm flex-1 ${PLAYER_COLORS[p.index]}`}>{p.name}</span>
+              <span className="font-mono font-bold text-lg">{scores[p.index]} pts</span>
             </div>
           ))}
         </div>
+        <p className="text-xs text-muted-foreground mb-4">{questionNum} questions jouées</p>
         <button onClick={onBack} className="bg-primary text-primary-foreground font-black py-3 px-8 rounded-full active:scale-[0.97]">
           🏠 RETOUR
         </button>
@@ -154,53 +160,92 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
     );
   }
 
-  // Play phase — each player gets a mini section
-  const activePlayers = names.map((n, i) => ({ name: n, index: i })).filter(p => p.name.trim());
-  const keys = ["7","8","9","±","4","5","6",",","1","2","3","/","0",".","-","del"];
+  // Play phase — buzzer style
+  const keys = [
+    { l: "7" }, { l: "8" }, { l: "9" }, { l: "±" },
+    { l: "4" }, { l: "5" }, { l: "6" }, { l: "," },
+    { l: "1" }, { l: "2" }, { l: "3" }, { l: "." },
+    { l: "0" }, { l: "00" }, { l: "/" }, { l: "-" },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col p-2">
-      {/* Question banner */}
-      <div className="bg-card rounded-lg p-4 mb-3 text-center border border-foreground/10">
-        <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest mb-1">{question.category}</p>
-        <p className="font-mono text-xl font-black">{question.text} = ?</p>
-      </div>
-
-      {/* Player panels */}
-      <div className={`grid gap-2 flex-1 ${activePlayers.length <= 2 ? "grid-cols-2" : "grid-cols-2 grid-rows-2"}`}>
+    <div className="min-h-screen flex flex-col p-3">
+      {/* Scores */}
+      <div className="flex gap-2 mb-3">
         {activePlayers.map(({ name, index }) => (
-          <div key={index} className="bg-card rounded-lg p-2 border border-foreground/5 flex flex-col">
-            <div className="flex items-center justify-between mb-1">
-              <span className={`font-black text-xs ${PLAYER_COLORS[index]}`}>{name}</span>
-              <span className="font-mono text-xs font-bold">{scores[index]}pts</span>
-            </div>
-            {feedback[index] && (
-              <div className="text-center font-bold text-sm mb-1 animate-fade-in">{feedback[index]}</div>
-            )}
-            <div className="font-mono text-base bg-foreground/5 rounded px-2 py-1.5 mb-1 text-center min-h-[28px]">
-              {inputs[index] || "?"}
-            </div>
-            <div className="grid grid-cols-4 gap-0.5 flex-1">
-              {keys.map(k => (
-                <button key={k}
-                  onClick={() => k === "del" ? handleKey(index, "del") : handleKey(index, k)}
-                  className={`py-1.5 rounded text-xs font-mono font-bold active:scale-90 transition-all
-                    ${k === "del" ? "bg-destructive/20 text-destructive" : "bg-foreground/5 text-foreground"}`}
-                >
-                  {k === "del" ? "⌫" : k}
-                </button>
-              ))}
-            </div>
-            <button onClick={() => handleSubmit(index)}
-              className="mt-1 py-2 rounded-lg bg-game-mint text-background font-black text-xs active:scale-95">
-              ✓ VALIDER
-            </button>
+          <div key={index} className={`flex-1 text-center py-2 rounded-lg bg-card border ${PLAYER_BORDERS[index]}`}>
+            <p className={`text-xs font-black ${PLAYER_COLORS[index]}`}>{name}</p>
+            <p className="font-mono font-bold text-lg">{scores[index]}</p>
           </div>
         ))}
       </div>
 
+      {/* Question */}
+      <div className="bg-card rounded-lg p-4 mb-3 text-center border border-foreground/10">
+        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">
+          Q{questionNum} · {question.category}
+        </p>
+        <p className="font-mono text-xl font-black">{question.text} = ?</p>
+      </div>
+
+      {/* Feedback */}
+      {feedback && (
+        <div className="text-center font-black text-lg mb-3 animate-fade-in">
+          {feedback.text}
+        </div>
+      )}
+
+      {/* Buzzer: select who answers */}
+      {activePlayer === null && !feedback && (
+        <div className="mb-3">
+          <p className="text-center text-xs text-muted-foreground mb-2 font-bold uppercase tracking-widest">
+            🔔 Qui veut répondre ?
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            {activePlayers.map(({ name, index }) => (
+              <button key={index} onClick={() => selectPlayer(index)}
+                className={`py-4 rounded-xl font-black text-sm border-2 ${PLAYER_BORDERS[index]}
+                  bg-card transition-all active:scale-95 hover:border-primary/50`}>
+                <span className={PLAYER_COLORS[index]}>{name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Active player input */}
+      {activePlayer !== null && !feedback && (
+        <div className="animate-fade-in">
+          <p className={`text-center text-sm font-black mb-2 ${PLAYER_COLORS[activePlayer]}`}>
+            {names[activePlayer]} répond...
+          </p>
+          <div className="font-mono text-2xl bg-foreground/5 rounded-xl px-4 py-3 mb-3 text-center font-bold">
+            {input || "?"}
+          </div>
+          <div className="grid grid-cols-4 gap-1.5 mb-2">
+            {keys.map((k, i) => (
+              <button key={i} onClick={() => handleKey(k.l)}
+                className="py-3 rounded-lg bg-foreground/5 font-mono font-bold text-base
+                  text-foreground active:scale-90 transition-all">
+                {k.l}
+              </button>
+            ))}
+          </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            <button onClick={() => handleKey("del")}
+              className="py-3 rounded-lg bg-destructive/20 text-destructive font-mono font-bold">
+              ⌫
+            </button>
+            <button onClick={handleSubmit}
+              className="py-3 rounded-lg bg-game-mint text-background font-black text-sm col-span-2 active:scale-[0.97]">
+              ✓ VALIDER
+            </button>
+          </div>
+        </div>
+      )}
+
       <button onClick={onBack}
-        className="mt-2 text-center text-xs text-muted-foreground hover:text-foreground py-2">
+        className="mt-auto pt-3 text-center text-xs text-muted-foreground hover:text-foreground py-2">
         Quitter la battle
       </button>
     </div>

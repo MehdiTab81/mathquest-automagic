@@ -57,14 +57,16 @@ export function get3emeQuestions(): Question[] {
   // N5 – Additionner, soustraire deux rationnels
   // ═══════════════════════════════════════════════════════════
   const n5: [string, string, string][] = [
-    ["1/4 + 2/4", "3", "= 3/4 → numérateur"],
-    ["3/5 + 1/5", "4", "= 4/5 → numérateur"],
-    ["7/8 − 3/8", "4", "= 4/8 → numérateur"],
-    ["5/6 − 1/6", "4", "= 4/6 → numérateur"],
-    ["1/3 + 1/6", "3", "= 2/6 + 1/6 = 3/6 → numérateur"],
+    ["1/4 + 2/4", "0.75", "= 3/4"],
+    ["3/5 + 1/5", "0.8", "= 4/5"],
+    ["7/8 − 3/8", "0.5", "= 4/8 = 1/2"],
+    ["5/6 − 1/6", "0.667", "= 4/6 = 2/3"],
+    ["1/3 + 1/6", "0.5", "= 2/6 + 1/6 = 3/6 = 1/2"],
+    ["3/4 + 1/4", "1", "= 4/4 = 1"],
+    ["5/8 + 3/8", "1", "= 8/8 = 1"],
   ];
   n5.forEach(([t, r, h]) =>
-    qs.push({ text: `${t} → numérateur`, answer: r, category: "Add/sub fractions", hint: h })
+    qs.push({ text: t, answer: r, category: "Add/sub fractions", hint: h })
   );
 
   // ═══════════════════════════════════════════════════════════
@@ -647,19 +649,19 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "Série : 7 ; 18 ; 12 ; 13 ; 15. Moyenne ?", answer: "13", category: "Brevet – Statistiques", hint: "(7+18+12+13+15)/5 = 65/5" });
 
   // ── Brevet 2025 – Centres étrangers (QCM) ──────────────────
-  qs.push({ text: "Décomposition en facteurs premiers de 120 ?  Répondre 2³×3×5 → 120", answer: "120", category: "Brevet – Arithmétique", hint: "120 = 2³ × 3 × 5" });
+  qs.push({ text: "2³ × 3 × 5 = ?", answer: "120", category: "Brevet – Arithmétique", hint: "8 × 3 × 5 = 120" });
   qs.push({ text: "Forme factorisée de 4x² − 1 :  (2x−1)(2x+1). Pour x = 3, valeur ?", answer: "35", category: "Brevet – Identités remarquables", hint: "4×9 − 1 = 35 ou (5)(7) = 35" });
 
   // ── Brevet 2025 – Métropole (QCM) ─────────────────────────
   qs.push({ text: "3 melons coûtent 8,40 €. Combien coûtent 5 melons ?", answer: "14", category: "Brevet – Proportionnalité", hint: "1 melon = 2,80 €. 5 × 2,80" });
   qs.push({ text: "Un article coûte 350 €. Augmentation de 20 %. Nouveau prix ?", answer: "420", category: "Brevet – Pourcentages", hint: "350 × 1,20 = 420" });
   qs.push({ text: "Aire d'un triangle rectangle : côtés 6 cm et 4,5 cm ?", answer: "13.5", category: "Brevet – Aires", hint: "6 × 4,5 / 2 = 13,5" });
-  qs.push({ text: "Développer (2x+3)(x−4). Pour x = 1, valeur ?", answer: "-5", category: "Brevet – Développer", hint: "2−8+3−12 = −15 ou (5)(−3) = −15 ; pour x=1: 5×(−3) = −15... non: (2+3)(1−4) = 5×(−3) = −15" });
+  qs.push({ text: "(2x+3)(x−4) pour x = 1", answer: "-15", category: "Brevet – Développer", hint: "(2+3)(1−4) = 5×(−3) = −15" });
   qs.push({ text: "Volume pyramide base rect 4×7 cm, hauteur 12 cm ?", answer: "112", category: "Brevet – Volumes", hint: "(4×7×12)/3 = 336/3" });
 
   // ── Brevet 2025 – Polynésie juin (QCM) ────────────────────
   qs.push({ text: "(−3)² = ?", answer: "9", category: "Brevet – Puissances", hint: "(−3)×(−3) = 9" });
-  qs.push({ text: "Décomposition de 360 : 2³ × 3² × 5. Vérifier : 8 × 9 × 5 = ?", answer: "360", category: "Brevet – Arithmétique", hint: "8 × 9 × 5 = 360" });
+  qs.push({ text: "2³ × 3² × 5 = ?", answer: "360", category: "Brevet – Arithmétique", hint: "8 × 9 × 5 = 360" });
   qs.push({ text: "Rectangle d'aire 135 cm², largeur 3 cm. Longueur ?", answer: "45", category: "Brevet – Aires", hint: "135 ÷ 3 = 45" });
   qs.push({ text: "f(x) = 2x − 8. Image de 4 ?", answer: "0", category: "Brevet – Fonctions", hint: "2×4 − 8 = 0" });
   qs.push({ text: "f(x) = 2x − 8. Résultat = 100. Nombre de départ ?", answer: "54", category: "Brevet – Équations", hint: "2x − 8 = 100 → 2x = 108 → x = 54" });
@@ -676,7 +678,7 @@ export function get3emeQuestions(): Question[] {
   // ── Brevet 2025 – Métropole septembre (QCM) ───────────────
   qs.push({ text: "Étendue de 4 ; 8 ; 11 ; 7 ; 2 ; 3 ; 14 ?", answer: "12", category: "Brevet – Statistiques", hint: "14 − 2 = 12" });
   qs.push({ text: "1 L correspond à quel volume ? (en dm³)", answer: "1", category: "Brevet – Conversions", hint: "1 L = 1 dm³" });
-  qs.push({ text: "Écriture scientifique 8,6 × 10⁻⁴ en décimal. Combien de zéros après la virgule avant 86 ?", answer: "3", category: "Brevet – Notation scientifique", hint: "0,000 86 → 3 zéros" });
+  qs.push({ text: "8,6 × 10⁻⁴ en décimal = ?", answer: "0.00086", category: "Brevet – Notation scientifique", hint: "Déplacer la virgule de 4 rangs à gauche" });
   qs.push({ text: "Drapeau ratio 3:2, longueur 90 cm. Largeur ?", answer: "60", category: "Brevet – Ratios", hint: "90 ÷ 3 × 2 = 60" });
   qs.push({ text: "Parfum passe de 75 € à 60 €. Pourcentage de réduction ?", answer: "20", category: "Brevet – Pourcentages", hint: "(75−60)/75 × 100 = 20 %" });
   qs.push({ text: "Forme factorisée de 4x² − 25. Pour x = 3, valeur ?", answer: "11", category: "Brevet – Identités remarquables", hint: "36 − 25 = 11 ou (6−5)(6+5) = 11" });
@@ -780,7 +782,7 @@ export function get3emeQuestions(): Question[] {
 
   // ── Polynésie 2024 – exercice 5 ─────────────────────────
   qs.push({ text: "f(x) = (x+2)² − x. f(−4) = ?", answer: "8", category: "Brevet – Fonctions", hint: "(−2)² − (−4) = 4 + 4" });
-  qs.push({ text: "g(x) = 7x + 4. Antécédent de 3 ? (sous forme décimale)", answer: "-0.143", category: "Brevet – Fonctions", hint: "7x + 4 = 3 → 7x = −1 → x = −1/7" });
+  qs.push({ text: "g(x) = 7x + 4. g(0) = ?", answer: "4", category: "Brevet – Fonctions", hint: "7×0 + 4 = 4" });
 
   // ── Métropole juillet 2024 (QCM) ────────────────────────
   qs.push({ text: "f(x) = 3x − 2. f(−4) = ?", answer: "-14", category: "Brevet – Fonctions", hint: "3×(−4) − 2 = −12 − 2" });
@@ -793,7 +795,7 @@ export function get3emeQuestions(): Question[] {
   // ── Martinique 2024 ────────────────────────────────────────
   qs.push({ text: "Écriture scientifique de 13 420 ?  Exposant de 10 ?", answer: "4", category: "Brevet – Notation scientifique", hint: "1,342 × 10⁴" });
   qs.push({ text: "630 + 810 = ?", answer: "1440", category: "Brevet – Calcul", hint: "Nombre total de dragées" });
-  qs.push({ text: "Proba dragée blanche : 810 sur 1440 ? (arrondi au centième)", answer: "0.5625", category: "Brevet – Probabilités", hint: "810/1440 = 9/16" });
+  qs.push({ text: "Proba dragée blanche : 810 sur 1440 ?", answer: "0.5625", category: "Brevet – Probabilités", hint: "810/1440 = 9/16 = 0,5625" });
   qs.push({ text: "PGCD(630, 810) ?", answer: "90", category: "Brevet – PGCD", hint: "630 = 2×3²×5×7, 810 = 2×3⁴×5 → 2×3²×5" });
 
   // Programme calcul – Martinique 2024
@@ -811,7 +813,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "Étendue températures : 29 − 17,4 = ?", answer: "11.6", category: "Brevet – Statistiques", hint: "max − min" });
 
   // ── Métropole septembre 2024 ───────────────────────────────
-  qs.push({ text: "Décomposition 260. Est-ce 4×5×13 ? (4 pas premier) Réponse : 2²×5×13 = ?", answer: "260", category: "Brevet – Arithmétique", hint: "4×65 = 260 mais 4 = 2²" });
+  qs.push({ text: "2² × 5 × 13 = ?", answer: "260", category: "Brevet – Arithmétique", hint: "4 × 5 × 13 = 260" });
   qs.push({ text: "7x + 5 = 2x − 2. Solution x = ?", answer: "-1.4", category: "Brevet – Équations", hint: "5x = −7 → x = −7/5" });
   qs.push({ text: "5 m/s en km/h ?", answer: "18", category: "Brevet – Conversions", hint: "5 × 3,6 = 18" });
 
@@ -859,7 +861,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "Débit 14,1 m³/h pendant 2 h. Volume vidé ?", answer: "28.2", category: "Brevet – Proportionnalité", hint: "14,1 × 2" });
 
   // Polynésie 2025 – jardin botanique
-  qs.push({ text: "Triangle rect en B : AB=500, BD=1000. AD = ? (arrondi)", answer: "866", category: "Brevet – Pythagore", hint: "√(1000²−500²) = √750000 ≈ 866" });
+  qs.push({ text: "Triangle ABD : hyp BD=1000, AB=500. AD = ? (arrondi)", answer: "866", category: "Brevet – Pythagore", hint: "√(1000²−500²) = √750000 ≈ 866" });
 
   // Métropole 2025 – exercice 2 (aquathlon)
   qs.push({ text: "Triangle rect : AC=480, ADE rect en A. AD=200. CD = ? (arrondi)", answer: "520", category: "Brevet – Pythagore", hint: "√(480²+200²) = √270400 ≈ 520" });
