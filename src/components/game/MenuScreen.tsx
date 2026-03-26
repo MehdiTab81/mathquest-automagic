@@ -34,9 +34,10 @@ interface MenuScreenProps {
   onStartTraining: (category: string | null) => void;
   onStartExam: () => void;
   onStartDuel: () => void;
+  onStartBattle: () => void;
 }
 
-const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel }) => {
+const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel, onStartBattle }) => {
   const [showCategories, setShowCategories] = useState(false);
   const categories = getCategories(grade);
   const themeGroups = grade === "3eme" ? THEME_GROUPS_3EME : THEME_GROUPS_4EME;

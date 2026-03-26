@@ -26,7 +26,7 @@ interface QuizScreenProps {
   question: Question;
   questionIndex: number;
   totalQuestions: number;
-  onAnswer: (correct: boolean, timeMs: number) => void;
+  onAnswer: (correct: boolean, timeMs: number, userInput: string) => void;
   onSkip: () => void;
 }
 
@@ -62,7 +62,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
       return;
     }
     const elapsed = Date.now() - startTime;
-    onAnswer(true, elapsed);
+    onAnswer(true, elapsed, input);
   }, [input, question, onAnswer, startTime]);
 
   return (
