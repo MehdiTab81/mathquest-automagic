@@ -5,7 +5,6 @@ import type { Question } from "@/lib/questions";
 
 /** Renders fraction patterns like "3/4" as horizontal fraction bars */
 function renderMathText(text: string): React.ReactNode {
-  // Split on fraction patterns: digits/digits (but not inside words)
   const parts = text.split(/(\b\d+\/\d+\b)/g);
   return parts.map((part, i) => {
     const fractionMatch = part.match(/^(\d+)\/(\d+)$/);
@@ -33,37 +32,43 @@ interface QuizScreenProps {
 const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQuestions, onAnswer, onSkip }) => {
   const [input, setInput] = useState("");
   const [shake, setShake] = useState(false);
-  const [showHint, setShowHint] = useState(false);
+  const [wrongAnswer, setWrongAnswer] = useState(false);
   const [startTime] = useState(Date.now());
 
   const handleKey = useCallback((key: string) => {
+    if (wrongAnswer) return;
     if (key === "±") {
       setInput(prev => prev.startsWith("-") ? prev.slice(1) : "-" + prev);
-    } else if (key === ",") {
-      if (!input.includes(",") && !input.includes(".")) setInput(prev => prev + ",");
-    } else if (key === ".") {
-      if (!input.includes(",") && !input.includes(".")) setInput(prev => prev + ".");
+    } else if (key === "," || key === ".") {
+      if (!input.includes(",") && !input.includes(".")) setInput(prev => prev + key);
     } else {
       setInput(prev => prev + key);
     }
-  }, [input]);
+  }, [input, wrongAnswer]);
 
   const handleDelete = useCallback(() => {
+    if (wrongAnswer) return;
     setInput(prev => prev.slice(0, -1));
-  }, []);
+  }, [wrongAnswer]);
 
   const handleValidate = useCallback(() => {
+    if (wrongAnswer) return;
     if (!input.trim()) return;
     const correct = checkAnswer(input, question.answer);
-    if (!correct) {
+    if (correct) {
+      const elapsed = Date.now() - startTime;
+      onAnswer(true, elapsed, input);
+    } else {
       setShake(true);
       setTimeout(() => setShake(false), 400);
-      setShowHint(true);
-      return;
+      setWrongAnswer(true);
     }
+  }, [input, question, onAnswer, startTime, wrongAnswer]);
+
+  const handleNext = useCallback(() => {
     const elapsed = Date.now() - startTime;
-    onAnswer(true, elapsed, input);
-  }, [input, question, onAnswer, startTime]);
+    onAnswer(false, elapsed, input);
+  }, [onAnswer, startTime, input]);
 
   return (
     <div className="animate-fade-in space-y-4">
@@ -90,31 +95,43 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
           type="text"
           readOnly
           value={input}
-          className="w-full bg-background/30 border-2 border-foreground/10 rounded-xl p-4 text-center
-            font-mono text-2xl font-bold text-foreground outline-none focus:border-primary/40 transition-colors"
+          className={`w-full bg-background/30 border-2 rounded-xl p-4 text-center
+            font-mono text-2xl font-bold text-foreground outline-none transition-colors
+            ${wrongAnswer ? "border-destructive/40 opacity-50" : "border-foreground/10 focus:border-primary/40"}`}
           placeholder="?"
         />
-        <button
-          onClick={onSkip}
-          className="w-full mt-3 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          Passer cette question →
-        </button>
       </div>
 
-      {showHint && question.hint && (
-        <div className="bg-accent/10 border-l-4 border-accent p-3 rounded-[10px] text-sm animate-fade-in">
-          💡 {question.hint}
+      {wrongAnswer && (
+        <div className="bg-destructive/10 border-l-4 border-destructive p-4 rounded-[10px] animate-fade-in">
+          <p className="text-sm font-bold mb-1">❌ Réponse incorrecte</p>
+          <p className="text-sm">
+            La bonne réponse est <strong className="font-mono text-base">{question.answer}</strong>
+          </p>
+          {question.hint && (
+            <p className="text-xs text-muted-foreground mt-1">💡 {question.hint}</p>
+          )}
+          <button
+            onClick={handleNext}
+            className="mt-3 w-full bg-primary text-primary-foreground font-black py-3 rounded-lg
+              text-sm transition-all active:scale-[0.97]"
+          >
+            Question suivante →
+          </button>
         </div>
       )}
 
-      {showHint && !question.hint && (
-        <div className="bg-destructive/10 border-l-4 border-destructive p-3 rounded-[10px] text-sm animate-fade-in">
-          ❌ Réponse incorrecte. La bonne réponse est <strong className="font-mono">{question.answer}</strong>
-        </div>
+      {!wrongAnswer && (
+        <>
+          <button
+            onClick={onSkip}
+            className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+          >
+            Passer cette question →
+          </button>
+          <Keypad onKey={handleKey} onDelete={handleDelete} onValidate={handleValidate} />
+        </>
       )}
-
-      <Keypad onKey={handleKey} onDelete={handleDelete} onValidate={handleValidate} />
     </div>
   );
 };
