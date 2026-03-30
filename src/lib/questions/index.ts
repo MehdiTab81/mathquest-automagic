@@ -18,6 +18,7 @@ const TROISIEME_ONLY_CATEGORIES = new Set([
   "PGCD",
   "Probabilité simple",
   "Événement contraire",
+  "Équation ax + b = c",
 ]);
 
 function isBrevet(category: string): boolean {
