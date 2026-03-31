@@ -246,10 +246,12 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
             🔔 Qui veut répondre ?
           </p>
           <div className="grid grid-cols-2 gap-2">
-            {activePlayers.map(({ name, index }) => (
-              <button key={index} onClick={() => selectPlayer(index)}
+             {activePlayers.map(({ name, index }) => (
+              <button key={index}
+                onPointerDown={(e) => { e.preventDefault(); selectPlayer(index); }}
                 className={`py-4 rounded-xl font-black text-sm border-2 ${PLAYER_BORDERS[index]}
-                  bg-card transition-all active:scale-95 hover:border-primary/50`}>
+                  bg-card transition-all active:scale-95 hover:border-primary/50 select-none`}
+                style={{ touchAction: "manipulation" }}>
                 <span className={PLAYER_COLORS[index]}>{name}</span>
               </button>
             ))}
