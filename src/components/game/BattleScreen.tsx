@@ -246,10 +246,12 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
             🔔 Qui veut répondre ?
           </p>
           <div className="grid grid-cols-2 gap-2">
-            {activePlayers.map(({ name, index }) => (
-              <button key={index} onClick={() => selectPlayer(index)}
+             {activePlayers.map(({ name, index }) => (
+              <button key={index}
+                onPointerDown={(e) => { e.preventDefault(); selectPlayer(index); }}
                 className={`py-4 rounded-xl font-black text-sm border-2 ${PLAYER_BORDERS[index]}
-                  bg-card transition-all active:scale-95 hover:border-primary/50`}>
+                  bg-card transition-all active:scale-95 hover:border-primary/50 select-none`}
+                style={{ touchAction: "manipulation" }}>
                 <span className={PLAYER_COLORS[index]}>{name}</span>
               </button>
             ))}
@@ -272,22 +274,28 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
           <div className="font-mono text-2xl bg-foreground/5 rounded-xl px-4 py-3 mb-3 text-center font-bold">
             {input || "?"}
           </div>
-          <div className="grid grid-cols-4 gap-1.5 mb-2">
+          <div className="grid grid-cols-4 gap-1.5 mb-2" style={{ touchAction: "manipulation" }}>
             {keys.map((k, i) => (
-              <button key={i} onClick={() => handleKey(k.l)}
+              <button key={i}
+                onPointerDown={(e) => { e.preventDefault(); handleKey(k.l); }}
                 className="py-3 rounded-lg bg-foreground/5 font-mono font-bold text-base
-                  text-foreground active:scale-90 transition-all">
+                  text-foreground active:scale-90 transition-all select-none"
+                style={{ touchAction: "manipulation" }}>
                 {k.l}
               </button>
             ))}
           </div>
-          <div className="grid grid-cols-3 gap-1.5">
-            <button onClick={() => handleKey("del")}
-              className="py-3 rounded-lg bg-destructive/20 text-destructive font-mono font-bold">
+          <div className="grid grid-cols-3 gap-1.5" style={{ touchAction: "manipulation" }}>
+            <button
+              onPointerDown={(e) => { e.preventDefault(); handleKey("del"); }}
+              className="py-3 rounded-lg bg-destructive/20 text-destructive font-mono font-bold select-none"
+              style={{ touchAction: "manipulation" }}>
               ⌫
             </button>
-            <button onClick={handleSubmit}
-              className="py-3 rounded-lg bg-game-mint text-background font-black text-sm col-span-2 active:scale-[0.97]">
+            <button
+              onPointerDown={(e) => { e.preventDefault(); handleSubmit(); }}
+              className="py-3 rounded-lg bg-game-mint text-background font-black text-sm col-span-2 active:scale-[0.97] select-none"
+              style={{ touchAction: "manipulation" }}>
               ✓ VALIDER
             </button>
           </div>
