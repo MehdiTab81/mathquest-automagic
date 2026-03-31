@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { getDuelQuestion, checkAnswer } from "@/lib/questions";
 import type { Question, Grade } from "@/lib/questions";
 
@@ -14,10 +14,11 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
   const [winner, setWinner] = useState<number | null>(null);
   const [round, setRound] = useState(1);
   const [feedback, setFeedback] = useState<[string, string]>(["", ""]);
+  const lockedRef = useRef(false);
   const maxRounds = 10;
 
   const handleKey = useCallback((player: number, key: string) => {
-    if (winner !== null) return;
+    if (winner !== null || lockedRef.current) return;
     setInputs(prev => {
       const next = [...prev];
       if (key === "del") {
@@ -36,47 +37,54 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
   }, [winner]);
 
   const handleSubmit = useCallback((player: number) => {
-    if (!inputs[player].trim() || winner !== null) return;
-    if (checkAnswer(inputs[player], question.answer)) {
-      const newScores = [...scores];
-      newScores[player]++;
-      setScores(newScores);
-      setFeedback(prev => {
-        const next = [...prev] as [string, string];
-        next[player] = "✅";
-        return next;
-      });
+    if (lockedRef.current || winner !== null) return;
+    // Read current input from state synchronously via updater
+    setInputs(prevInputs => {
+      if (!prevInputs[player].trim()) return prevInputs;
 
-      setTimeout(() => {
-        if (round >= maxRounds) {
-          setWinner(newScores[0] >= newScores[1] ? 0 : 1);
-        } else {
-          setRound(r => r + 1);
-          setQuestion(getDuelQuestion(grade));
-          setInputs(["", ""]);
-          setFeedback(["", ""]);
-        }
-      }, 600);
-    } else {
-      setFeedback(prev => {
-        const next = [...prev] as [string, string];
-        next[player] = "❌";
-        return next;
-      });
-      setInputs(prev => {
-        const next = [...prev];
-        next[player] = "";
-        return next;
-      });
-      setTimeout(() => {
+      if (checkAnswer(prevInputs[player], question.answer)) {
+        lockedRef.current = true;
+        setScores(prev => {
+          const newScores = [...prev];
+          newScores[player]++;
+          setTimeout(() => {
+            if (round >= maxRounds) {
+              setWinner(newScores[0] >= newScores[1] ? 0 : 1);
+            } else {
+              setRound(r => r + 1);
+              setQuestion(getDuelQuestion(grade));
+              setInputs(["", ""]);
+              setFeedback(["", ""]);
+              lockedRef.current = false;
+            }
+          }, 600);
+          return newScores;
+        });
         setFeedback(prev => {
           const next = [...prev] as [string, string];
-          next[player] = "";
+          next[player] = "✅";
           return next;
         });
-      }, 800);
-    }
-  }, [inputs, question, scores, round, winner, grade]);
+      } else {
+        setFeedback(prev => {
+          const next = [...prev] as [string, string];
+          next[player] = "❌";
+          return next;
+        });
+        const cleared = [...prevInputs];
+        cleared[player] = "";
+        setTimeout(() => {
+          setFeedback(prev => {
+            const next = [...prev] as [string, string];
+            next[player] = "";
+            return next;
+          });
+        }, 800);
+        return cleared;
+      }
+      return prevInputs;
+    });
+  }, [question, round, winner, grade]);
 
   if (winner !== null) {
     const tie = scores[0] === scores[1];
@@ -94,16 +102,21 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
   }
 
   const MiniKeypad = ({ player }: { player: number }) => (
-    <div className="grid grid-cols-4 gap-1 w-full max-w-[220px]">
-      {["7","8","9","±","4","5","6",",","1","2","3","/","0","del",".",  "✓"].map(k => (
+    <div className="grid grid-cols-4 gap-1 w-full max-w-[220px]" style={{ touchAction: "manipulation" }}>
+      {["7","8","9","±","4","5","6",",","1","2","3","/","0","del",".","✓"].map(k => (
         <button
           key={k}
-          onClick={() => k === "✓" ? handleSubmit(player) : handleKey(player, k)}
-          className={`py-2.5 rounded-lg font-mono font-bold text-sm transition-all active:scale-90
+          onPointerDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            k === "✓" ? handleSubmit(player) : handleKey(player, k);
+          }}
+          className={`py-2.5 rounded-lg font-mono font-bold text-sm transition-all active:scale-90 select-none
             ${k === "del" ? "bg-destructive/20 text-destructive" :
               k === "✓" ? "bg-game-mint text-background" :
               k === "±" || k === "," || k === "." || k === "/" ? "bg-secondary/20 text-secondary" :
               "bg-foreground/5 text-foreground"}`}
+          style={{ touchAction: "manipulation" }}
         >
           {k === "del" ? "⌫" : k === "±" ? "±" : k}
         </button>
@@ -112,7 +125,7 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ touchAction: "manipulation" }}>
       {/* Player 2 — rotated 180° */}
       <div className="flex-1 flex flex-col items-center justify-center p-4 rotate-180">
         <p className="font-bold text-sm mb-1">Joueur 2 : {scores[1]} {feedback[1]}</p>

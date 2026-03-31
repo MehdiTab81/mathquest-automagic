@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { getDuelQuestion, checkAnswer } from "@/lib/questions";
 import type { Question, Grade } from "@/lib/questions";
 
@@ -9,6 +9,7 @@ interface BattleScreenProps {
 
 const WINNING_SCORE = 5;
 const WRONG_PENALTY = -2;
+const ANSWER_TIME = 10;
 const PLAYER_COLORS = [
   "text-game-gold",
   "text-game-teal",
@@ -32,8 +33,45 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
   const [feedback, setFeedback] = useState<{ player: number; text: string } | null>(null);
   const [winner, setWinner] = useState<number | null>(null);
   const [questionNum, setQuestionNum] = useState(1);
+  const [timer, setTimer] = useState(ANSWER_TIME);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const activePlayers = names.map((n, i) => ({ name: n, index: i })).filter(p => p.name.trim());
+
+  // Timer logic: starts when a player buzzes in
+  useEffect(() => {
+    if (activePlayer !== null && !feedback) {
+      setTimer(ANSWER_TIME);
+      timerRef.current = setInterval(() => {
+        setTimer(prev => {
+          if (prev <= 1) {
+            // Time's up — penalize and reset
+            clearInterval(timerRef.current!);
+            timerRef.current = null;
+            setScores(s => {
+              const ns = [...s];
+              ns[activePlayer] = Math.max(0, ns[activePlayer] + WRONG_PENALTY);
+              return ns;
+            });
+            setFeedback({ player: activePlayer, text: `⏱️ Temps écoulé ! ${WRONG_PENALTY} pts` });
+            setTimeout(() => {
+              setInput("");
+              setActivePlayer(null);
+              setFeedback(null);
+            }, 1200);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [activePlayer, feedback]);
 
   const handleRegister = () => {
     if (activePlayers.length < 2) return;
@@ -61,6 +99,11 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
 
   const handleSubmit = useCallback(() => {
     if (activePlayer === null || !input.trim() || feedback) return;
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
 
     if (checkAnswer(input, question.answer)) {
       const newScores = [...scores];
@@ -121,6 +164,7 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
           <p className="font-bold mb-1">📋 Règles</p>
           <p>✅ Bonne réponse = <strong>+1 pt</strong></p>
           <p>❌ Mauvaise réponse = <strong>{WRONG_PENALTY} pts</strong></p>
+          <p>⏱️ Chrono de <strong>{ANSWER_TIME}s</strong> pour répondre</p>
           <p>🏆 Premier à <strong>{WINNING_SCORE} pts</strong> gagne</p>
           <p className="mt-1 text-muted-foreground">Appuyez sur votre nom pour buzzer !</p>
         </div>
@@ -216,9 +260,15 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
       {/* Active player input */}
       {activePlayer !== null && !feedback && (
         <div className="animate-fade-in">
-          <p className={`text-center text-sm font-black mb-2 ${PLAYER_COLORS[activePlayer]}`}>
-            {names[activePlayer]} répond...
-          </p>
+          <div className="flex items-center justify-between mb-2">
+            <p className={`text-sm font-black ${PLAYER_COLORS[activePlayer]}`}>
+              {names[activePlayer]} répond...
+            </p>
+            <div className={`font-mono font-black text-lg px-3 py-1 rounded-lg
+              ${timer <= 3 ? "bg-destructive/20 text-destructive animate-pulse" : "bg-foreground/5 text-foreground"}`}>
+              {timer}s
+            </div>
+          </div>
           <div className="font-mono text-2xl bg-foreground/5 rounded-xl px-4 py-3 mb-3 text-center font-bold">
             {input || "?"}
           </div>
