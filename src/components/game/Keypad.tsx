@@ -15,15 +15,19 @@ const Keypad: React.FC<KeypadProps> = ({ onKey, onDelete, onValidate }) => {
   ];
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" style={{ touchAction: "manipulation" }}>
       <div className="grid grid-cols-4 gap-2">
         {rows.flat().map((k, i) => (
           <button
             key={i}
-            onClick={() => onKey(k.l)}
+            onPointerDown={(e) => {
+              e.preventDefault();
+              onKey(k.l);
+            }}
             className={`py-4 rounded-[10px] bg-foreground/5 font-mono font-extrabold text-lg
               text-foreground transition-all duration-100 active:scale-95 active:bg-accent
-              hover:bg-foreground/10 ${k.cls || ""}`}
+              hover:bg-foreground/10 select-none ${k.cls || ""}`}
+            style={{ touchAction: "manipulation" }}
           >
             {k.l}
           </button>
@@ -31,16 +35,24 @@ const Keypad: React.FC<KeypadProps> = ({ onKey, onDelete, onValidate }) => {
       </div>
       <div className="grid grid-cols-3 gap-2">
         <button
-          onClick={onDelete}
+          onPointerDown={(e) => {
+            e.preventDefault();
+            onDelete();
+          }}
           className="py-4 rounded-[10px] bg-destructive/20 text-destructive font-mono font-extrabold
-            text-lg transition-all duration-100 active:scale-95"
+            text-lg transition-all duration-100 active:scale-95 select-none"
+          style={{ touchAction: "manipulation" }}
         >
           ⌫
         </button>
         <button
-          onClick={onValidate}
+          onPointerDown={(e) => {
+            e.preventDefault();
+            onValidate();
+          }}
           className="py-4 rounded-[10px] bg-game-mint text-background font-nunito font-black
-            text-base col-span-2 transition-all duration-100 active:scale-[0.97] animate-pulse-glow"
+            text-base col-span-2 transition-all duration-100 active:scale-[0.97] animate-pulse-glow select-none"
+          style={{ touchAction: "manipulation" }}
         >
           VALIDER
         </button>
