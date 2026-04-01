@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useRef } from "react";
 import { getDuelQuestion, checkAnswer } from "@/lib/questions";
-import type { Question, Grade } from "@/lib/questions";
+import type { Question, Grade, ThemeId } from "@/lib/questions";
 
 interface DuelScreenProps {
   grade: Grade;
+  themeId: ThemeId;
   onBack: () => void;
 }
 
@@ -25,9 +26,9 @@ function renderMathText(text: string): React.ReactNode {
   });
 }
 
-const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
+const DuelScreen: React.FC<DuelScreenProps> = ({ grade, themeId, onBack }) => {
   const [scores, setScores] = useState([0, 0]);
-  const [question, setQuestion] = useState<Question>(() => getDuelQuestion(grade));
+  const [question, setQuestion] = useState<Question>(() => getDuelQuestion(grade, themeId));
   const [inputs, setInputs] = useState(["", ""]);
   const [winner, setWinner] = useState<number | null>(null);
   const [round, setRound] = useState(1);
@@ -35,8 +36,24 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
   const lockedRef = useRef(false);
   const maxRounds = 10;
 
+  const isQcm = !!question.options && question.options.length > 0;
+
+  const nextRound = useCallback((newScores: number[]) => {
+    setTimeout(() => {
+      if (round >= maxRounds) {
+        setWinner(newScores[0] >= newScores[1] ? 0 : 1);
+      } else {
+        setRound(r => r + 1);
+        setQuestion(getDuelQuestion(grade, themeId));
+        setInputs(["", ""]);
+        setFeedback(["", ""]);
+        lockedRef.current = false;
+      }
+    }, 500);
+  }, [round, grade, themeId]);
+
   const handleKey = useCallback((player: number, key: string) => {
-    if (winner !== null || lockedRef.current) return;
+    if (winner !== null || lockedRef.current || isQcm) return;
     setInputs(prev => {
       const next = [...prev];
       if (key === "del") {
@@ -52,7 +69,7 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
       }
       return next;
     });
-  }, [winner]);
+  }, [winner, isQcm]);
 
   const handleSubmit = useCallback((player: number) => {
     if (lockedRef.current || winner !== null) return;
@@ -64,17 +81,7 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
         setScores(prev => {
           const newScores = [...prev];
           newScores[player]++;
-          setTimeout(() => {
-            if (round >= maxRounds) {
-              setWinner(newScores[0] >= newScores[1] ? 0 : 1);
-            } else {
-              setRound(r => r + 1);
-              setQuestion(getDuelQuestion(grade));
-              setInputs(["", ""]);
-              setFeedback(["", ""]);
-              lockedRef.current = false;
-            }
-          }, 500);
+          nextRound(newScores);
           return newScores;
         });
         setFeedback(prev => {
@@ -101,7 +108,38 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
       }
       return prevInputs;
     });
-  }, [question, round, winner, grade]);
+  }, [question, winner, nextRound]);
+
+  const handleQcmSelect = useCallback((player: number, option: string) => {
+    if (lockedRef.current || winner !== null) return;
+    if (checkAnswer(option, question.answer, true)) {
+      lockedRef.current = true;
+      setScores(prev => {
+        const newScores = [...prev];
+        newScores[player]++;
+        nextRound(newScores);
+        return newScores;
+      });
+      setFeedback(prev => {
+        const next = [...prev] as [string, string];
+        next[player] = "✅";
+        return next;
+      });
+    } else {
+      setFeedback(prev => {
+        const next = [...prev] as [string, string];
+        next[player] = "❌";
+        return next;
+      });
+      setTimeout(() => {
+        setFeedback(prev => {
+          const next = [...prev] as [string, string];
+          next[player] = "";
+          return next;
+        });
+      }, 600);
+    }
+  }, [question, winner, nextRound]);
 
   if (winner !== null) {
     const tie = scores[0] === scores[1];
@@ -143,12 +181,31 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
     </div>
   );
 
+  const QcmOptions = ({ player }: { player: number }) => (
+    <div className="grid grid-cols-2 gap-[3px] w-full" style={{ touchAction: "manipulation" }}>
+      {(question.options || []).map((opt, i) => (
+        <button
+          key={i}
+          onPointerDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleQcmSelect(player, opt);
+          }}
+          className="py-[min(2.5vh,12px)] px-1 rounded-md font-bold text-[min(2.5vh,11px)] bg-foreground/5
+            text-foreground active:scale-90 transition-all select-none leading-tight text-center"
+          style={{ touchAction: "manipulation" }}
+        >
+          <span className="font-mono text-[0.7em] text-muted-foreground">{String.fromCharCode(65 + i)}.</span> {opt}
+        </button>
+      ))}
+    </div>
+  );
+
   const PlayerZone = ({ player, rotated }: { player: number; rotated?: boolean }) => (
     <div
       className={`flex-1 flex flex-col items-center px-3 py-1 min-h-0 ${rotated ? "rotate-180" : ""}`}
       style={{ touchAction: "manipulation", overflow: "hidden" }}
     >
-      {/* Header: compact info line */}
       <div className="w-full flex justify-between items-center mb-1">
         <span className="font-black text-xs text-muted-foreground">
           J{player + 1} · {scores[player]}pts {feedback[player]}
@@ -158,19 +215,18 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
         </span>
       </div>
 
-      {/* Question */}
       <p className="font-mono text-sm font-black mb-1 text-center leading-tight flex items-center justify-center flex-wrap">
-        {renderMathText(question.text)} <span className="ml-1">= ?</span>
+        {renderMathText(question.text)} {!isQcm && <span className="ml-1">= ?</span>}
       </p>
 
-      {/* Answer display — compact */}
-      <div className="font-mono text-lg bg-foreground/5 rounded-lg px-3 py-1 mb-1 min-w-[100px] text-center select-none">
-        {inputs[player] || "?"}
-      </div>
+      {!isQcm && (
+        <div className="font-mono text-lg bg-foreground/5 rounded-lg px-3 py-1 mb-1 min-w-[100px] text-center select-none">
+          {inputs[player] || "?"}
+        </div>
+      )}
 
-      {/* Keypad */}
-      <div className="w-full max-w-[240px]">
-        <MiniKeypad player={player} />
+      <div className="w-full max-w-[260px]">
+        {isQcm ? <QcmOptions player={player} /> : <MiniKeypad player={player} />}
       </div>
     </div>
   );
@@ -180,10 +236,7 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
       className="h-screen flex flex-col overflow-hidden select-none"
       style={{ touchAction: "manipulation", position: "fixed", inset: 0 }}
     >
-      {/* Player 2 — rotated */}
       <PlayerZone player={1} rotated />
-
-      {/* Center divider + quit button */}
       <div className="relative flex-shrink-0 h-8 flex items-center justify-center">
         <div className="absolute inset-x-4 top-1/2 h-[2px] bg-accent/30 -translate-y-1/2" />
         <button
@@ -195,8 +248,6 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, onBack }) => {
           Quitter
         </button>
       </div>
-
-      {/* Player 1 */}
       <PlayerZone player={0} />
     </div>
   );

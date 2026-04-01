@@ -726,7 +726,6 @@ export function get3emeQuestions(): Question[] {
   // Calcul littéral – Substitution (évaluer une expression)
   // ═══════════════════════════════════════════════════════════
   const clSub: [string, number, string][] = [
-    // Simple distributivité
     ["5(3x + 2) pour x = 1", 25, "5(3+2) = 5×5"],
     ["−3(2x − 5) pour x = 2", 3, "−3(4−5) = −3×(−1)"],
     ["5x(−3x + 2) pour x = 1", -5, "5(−3+2) = 5×(−1)"],
@@ -734,16 +733,13 @@ export function get3emeQuestions(): Question[] {
     ["3(x + 4) pour x = 2", 18, "3×6 = 18"],
     ["−2(x − 4) pour x = 3", 2, "−2(−1) = 2"],
     ["−6(2 − 3x) pour x = 1", 6, "−6(2−3) = −6×(−1)"],
-    // Développer et réduire
     ["3(2x − 4) + 5(3 − x) pour x = 2", 7, "6×2−12+15−5×2 = 12−12+15−10"],
     ["2x(5 + 3x) − 4(x + 5) pour x = 1", -4, "2(8)−4(6) = 16−24"],
     ["A = x² + 6x pour x = 3", 27, "9 + 18 = 27"],
     ["A = 7x² − 35 pour x = 3", 28, "63 − 35 = 28"],
-    // Carrés
     ["(2x)² pour x = 3", 36, "6² = 36"],
     ["(−3x)² pour x = 2", 36, "(−6)² = 36"],
     ["−(3x)² pour x = 2", -36, "−(6²) = −36"],
-    // Substitution simple
     ["A = 5x − 3 pour x = −2", -13, "5×(−2) − 3"],
     ["A = −x² + 4 pour x = 3", -5, "−9 + 4"],
     ["A = 2x² + x − 1 pour x = 2", 9, "8 + 2 − 1"],
@@ -773,8 +769,7 @@ export function get3emeQuestions(): Question[] {
   );
 
   // ═══════════════════════════════════════════════════════════
-  // Calcul littéral – Tester une égalité
-  // Répondre 1 si vrai, 0 si faux
+  // Calcul littéral – Tester une égalité (1=oui, 0=non)
   // ═══════════════════════════════════════════════════════════
   const clTest: [string, number, string][] = [
     ["x = 3 vérifie-t-il 2x + 1 = 7 ? (1=oui, 0=non)", 1, "2×3+1 = 7 ✓"],
@@ -787,5 +782,140 @@ export function get3emeQuestions(): Question[] {
     qs.push({ text: t, answer: String(r), category: "Calcul littéral", hint: h })
   );
 
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Développer (calcul littéral)
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Développer : 3(2x + 5)", answer: "6x + 15", category: "Développer (QCM)",
+    options: ["6x + 15", "6x + 5", "5x + 15", "3x + 15"] });
+  qs.push({ text: "Développer : −2(3x − 4)", answer: "−6x + 8", category: "Développer (QCM)",
+    options: ["−6x + 8", "−6x − 8", "−6x + 4", "6x − 8"] });
+  qs.push({ text: "Développer : 5(x + 3)", answer: "5x + 15", category: "Développer (QCM)",
+    options: ["5x + 15", "5x + 3", "5x + 8", "x + 15"] });
+  qs.push({ text: "Développer : −4(2x − 1)", answer: "−8x + 4", category: "Développer (QCM)",
+    options: ["−8x + 4", "−8x − 4", "8x − 4", "−8x + 1"] });
+  qs.push({ text: "Développer : 2x(x + 3)", answer: "2x² + 6x", category: "Développer (QCM)",
+    options: ["2x² + 6x", "2x² + 3x", "2x + 6", "x² + 6x"] });
+  qs.push({ text: "Développer : −3x(2x − 5)", answer: "−6x² + 15x", category: "Développer (QCM)",
+    options: ["−6x² + 15x", "−6x² − 15x", "6x² − 15x", "−6x + 15"] });
+  qs.push({ text: "Développer : 7(x − 2)", answer: "7x − 14", category: "Développer (QCM)",
+    options: ["7x − 14", "7x − 2", "7x + 14", "x − 14"] });
+  qs.push({ text: "Développer : −(3x + 4)", answer: "−3x − 4", category: "Développer (QCM)",
+    options: ["−3x − 4", "3x − 4", "−3x + 4", "3x + 4"] });
+  qs.push({ text: "Développer : 4(3x + 2)", answer: "12x + 8", category: "Développer (QCM)",
+    options: ["12x + 8", "12x + 2", "7x + 8", "12x + 6"] });
+  qs.push({ text: "Développer : −5(x − 6)", answer: "−5x + 30", category: "Développer (QCM)",
+    options: ["−5x + 30", "−5x − 30", "5x − 30", "−5x + 6"] });
+  qs.push({ text: "Développer : x(x + 7)", answer: "x² + 7x", category: "Développer (QCM)",
+    options: ["x² + 7x", "x + 7x", "x² + 7", "7x²"] });
+  qs.push({ text: "Développer : 3x(4 − x)", answer: "12x − 3x²", category: "Développer (QCM)",
+    options: ["12x − 3x²", "12x + 3x²", "12 − 3x²", "3x − 12"] });
+  qs.push({ text: "Développer : −2(5x + 1)", answer: "−10x − 2", category: "Développer (QCM)",
+    options: ["−10x − 2", "−10x + 2", "10x − 2", "−10x − 1"] });
+  qs.push({ text: "Développer : 6(2x − 3)", answer: "12x − 18", category: "Développer (QCM)",
+    options: ["12x − 18", "12x + 18", "12x − 3", "6x − 18"] });
+
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Développer et réduire
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Développer et réduire : 3(2x − 4) + 5(3 − x)", answer: "x + 3", category: "Développer (QCM)",
+    options: ["x + 3", "x − 3", "11x + 3", "x + 27"] });
+  qs.push({ text: "Développer et réduire : 2(x + 1) + 3(x − 2)", answer: "5x − 4", category: "Développer (QCM)",
+    options: ["5x − 4", "5x + 4", "5x − 2", "6x − 4"] });
+  qs.push({ text: "Développer et réduire : 4(x − 3) − 2(x + 1)", answer: "2x − 14", category: "Développer (QCM)",
+    options: ["2x − 14", "2x − 10", "6x − 14", "2x + 14"] });
+  qs.push({ text: "Développer et réduire : 5(2x + 1) − 3(x − 4)", answer: "7x + 17", category: "Développer (QCM)",
+    options: ["7x + 17", "7x − 17", "7x + 7", "13x + 17"] });
+  qs.push({ text: "Développer et réduire : −(2x − 3) + 4(x + 1)", answer: "2x + 7", category: "Développer (QCM)",
+    options: ["2x + 7", "2x − 7", "6x + 7", "−2x + 7"] });
+
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Factoriser
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Factoriser : 6x + 12", answer: "6(x + 2)", category: "Factoriser (QCM)",
+    options: ["6(x + 2)", "3(2x + 4)", "2(3x + 6)", "6(x + 12)"] });
+  qs.push({ text: "Factoriser : 15x − 10", answer: "5(3x − 2)", category: "Factoriser (QCM)",
+    options: ["5(3x − 2)", "3(5x − 10)", "5(3x − 10)", "15(x − 10)"] });
+  qs.push({ text: "Factoriser : 4x² + 8x", answer: "4x(x + 2)", category: "Factoriser (QCM)",
+    options: ["4x(x + 2)", "4(x² + 8x)", "2x(2x + 4)", "x(4x + 8)"] });
+  qs.push({ text: "Factoriser : 10x − 25", answer: "5(2x − 5)", category: "Factoriser (QCM)",
+    options: ["5(2x − 5)", "10(x − 25)", "5(2x − 25)", "2(5x − 25)"] });
+  qs.push({ text: "Factoriser : 3x² − 9x", answer: "3x(x − 3)", category: "Factoriser (QCM)",
+    options: ["3x(x − 3)", "3(x² − 9x)", "x(3x − 9)", "9x(x − 1)"] });
+  qs.push({ text: "Factoriser : 12x + 18", answer: "6(2x + 3)", category: "Factoriser (QCM)",
+    options: ["6(2x + 3)", "3(4x + 6)", "2(6x + 9)", "12(x + 18)"] });
+  qs.push({ text: "Factoriser : 8x − 4", answer: "4(2x − 1)", category: "Factoriser (QCM)",
+    options: ["4(2x − 1)", "2(4x − 2)", "8(x − 4)", "4(2x − 4)"] });
+  qs.push({ text: "Factoriser : 14x + 21", answer: "7(2x + 3)", category: "Factoriser (QCM)",
+    options: ["7(2x + 3)", "14(x + 21)", "7(2x + 21)", "3(4x + 7)"] });
+  qs.push({ text: "Factoriser : 20x² − 15x", answer: "5x(4x − 3)", category: "Factoriser (QCM)",
+    options: ["5x(4x − 3)", "5(4x² − 3x)", "x(20x − 15)", "10x(2x − 15)"] });
+  qs.push({ text: "Factoriser : 9x + 27", answer: "9(x + 3)", category: "Factoriser (QCM)",
+    options: ["9(x + 3)", "3(3x + 9)", "9(x + 27)", "27(x + 1)"] });
+
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Réduire une expression
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Réduire : 3x + 5x − 2x", answer: "6x", category: "Réduire (QCM)",
+    options: ["6x", "8x", "10x", "4x"] });
+  qs.push({ text: "Réduire : 4x² + 2x² − x²", answer: "5x²", category: "Réduire (QCM)",
+    options: ["5x²", "6x²", "7x²", "4x²"] });
+  qs.push({ text: "Réduire : 7x − 3x + x", answer: "5x", category: "Réduire (QCM)",
+    options: ["5x", "4x", "11x", "3x"] });
+  qs.push({ text: "Réduire : 2x + 3 + 5x − 1", answer: "7x + 2", category: "Réduire (QCM)",
+    options: ["7x + 2", "7x + 4", "7x − 2", "10x + 2"] });
+  qs.push({ text: "Réduire : 6x − 2x + 4x − x", answer: "7x", category: "Réduire (QCM)",
+    options: ["7x", "8x", "9x", "3x"] });
+  qs.push({ text: "Réduire : x² + 3x + 2x² − x", answer: "3x² + 2x", category: "Réduire (QCM)",
+    options: ["3x² + 2x", "3x² + 3x", "x² + 2x", "3x² − 2x"] });
+  qs.push({ text: "Réduire : 5 + 3x − 2 + x", answer: "4x + 3", category: "Réduire (QCM)",
+    options: ["4x + 3", "3x + 3", "4x + 5", "4x − 3"] });
+  qs.push({ text: "Réduire : −2x + 8x − 3x", answer: "3x", category: "Réduire (QCM)",
+    options: ["3x", "7x", "−3x", "13x"] });
+  qs.push({ text: "Réduire : 4x + 7 − 2x − 3", answer: "2x + 4", category: "Réduire (QCM)",
+    options: ["2x + 4", "2x − 4", "6x + 4", "2x + 10"] });
+  qs.push({ text: "Réduire : 3x² − x² + 5x − 2x", answer: "2x² + 3x", category: "Réduire (QCM)",
+    options: ["2x² + 3x", "4x² + 3x", "2x² + 5x", "2x² − 3x"] });
+
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Simplifier une expression (avec suppression d'opposés)
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Simplifier : (4x − 8) − (3x − 7)", answer: "x − 1", category: "Simplifier (QCM)",
+    options: ["x − 1", "x + 1", "7x − 1", "x − 15"] });
+  qs.push({ text: "Simplifier : (6x² − 5x + 7) − (4x² − 5x − 5)", answer: "2x² + 12", category: "Simplifier (QCM)",
+    options: ["2x² + 12", "2x² + 2", "10x² + 12", "2x² − 10x + 12"] });
+  qs.push({ text: "Simplifier : 5x − (2x + 3)", answer: "3x − 3", category: "Simplifier (QCM)",
+    options: ["3x − 3", "3x + 3", "7x − 3", "3x − 1"] });
+  qs.push({ text: "Simplifier : (3x + 4) + (2x − 1)", answer: "5x + 3", category: "Simplifier (QCM)",
+    options: ["5x + 3", "5x + 5", "x + 3", "5x − 3"] });
+  qs.push({ text: "Simplifier : 2(x + 3) − (x + 1)", answer: "x + 5", category: "Simplifier (QCM)",
+    options: ["x + 5", "x + 7", "3x + 5", "x + 2"] });
+
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Identités remarquables
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Développer : (x + 3)²", answer: "x² + 6x + 9", category: "Développer (QCM)",
+    options: ["x² + 6x + 9", "x² + 9", "x² + 3x + 9", "x² + 6x + 3"] });
+  qs.push({ text: "Développer : (x − 5)²", answer: "x² − 10x + 25", category: "Développer (QCM)",
+    options: ["x² − 10x + 25", "x² + 10x + 25", "x² − 25", "x² − 5x + 25"] });
+  qs.push({ text: "Développer : (x + 2)(x − 2)", answer: "x² − 4", category: "Développer (QCM)",
+    options: ["x² − 4", "x² + 4", "x² − 2x + 4", "x² − 2"] });
+  qs.push({ text: "Développer : (2x + 1)²", answer: "4x² + 4x + 1", category: "Développer (QCM)",
+    options: ["4x² + 4x + 1", "4x² + 1", "2x² + 4x + 1", "4x² + 2x + 1"] });
+  qs.push({ text: "Développer : (3x − 2)(3x + 2)", answer: "9x² − 4", category: "Développer (QCM)",
+    options: ["9x² − 4", "9x² + 4", "6x² − 4", "9x² − 2"] });
+
+  // ═══════════════════════════════════════════════════════════════
+  // QCM – Double distributivité
+  // ═══════════════════════════════════════════════════════════════
+  qs.push({ text: "Développer : (x + 2)(x + 5)", answer: "x² + 7x + 10", category: "Développer (QCM)",
+    options: ["x² + 7x + 10", "x² + 7x + 7", "x² + 10x + 7", "x² + 5x + 10"] });
+  qs.push({ text: "Développer : (x − 1)(x + 4)", answer: "x² + 3x − 4", category: "Développer (QCM)",
+    options: ["x² + 3x − 4", "x² − 3x − 4", "x² + 3x + 4", "x² − 4x + 1"] });
+  qs.push({ text: "Développer : (2x + 3)(x − 1)", answer: "2x² + x − 3", category: "Développer (QCM)",
+    options: ["2x² + x − 3", "2x² − x − 3", "2x² + 3x − 3", "2x² + x + 3"] });
+  qs.push({ text: "Développer : (x + 6)(x − 3)", answer: "x² + 3x − 18", category: "Développer (QCM)",
+    options: ["x² + 3x − 18", "x² − 3x − 18", "x² + 3x + 18", "x² + 9x − 18"] });
+
   return qs;
 }
+

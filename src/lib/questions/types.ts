@@ -4,15 +4,78 @@ export interface Question {
   answer: string;
   category: string;
   hint?: string;
+  options?: string[]; // QCM choices — if present, show as multiple choice
 }
 
 export type Grade = "6eme" | "5eme" | "4eme" | "3eme";
+
+export type ThemeId = "nombres" | "algebre" | "fonctions" | "proportionnalite" | "statistiques" | "brevet" | "melange";
+
+export interface ThemeConfig {
+  id: ThemeId;
+  name: string;
+  emoji: string;
+  colorClass: string;       // tailwind text-* class
+  borderClass: string;      // tailwind border-* class
+  bgClass: string;          // tailwind bg-* class
+  prefixes: string[];       // category prefixes that belong to this theme
+}
+
+export const THEMES: ThemeConfig[] = [
+  {
+    id: "nombres", name: "Nombres & Calculs", emoji: "🔢",
+    colorClass: "text-game-gold", borderClass: "border-game-gold", bgClass: "bg-game-gold",
+    prefixes: ["Relatifs", "Fraction", "Quotients", "Add/sub frac", "Multiplier rat", "Diviser rat",
+      "Écritures", "Puissances", "Notation sci", "Carrés", "Racines", "Encadrer", "Double,",
+      "Tables", "Priorités", "PGCD", "Double, triple"]
+  },
+  {
+    id: "algebre", name: "Algèbre & Calcul littéral", emoji: "✏️",
+    colorClass: "text-game-teal", borderClass: "border-game-teal", bgClass: "bg-game-teal",
+    prefixes: ["Distributivité", "Double dist", "Identité", "Différence", "Programme de calcul",
+      "Substitution", "Équation", "Calcul littéral", "Développer", "Factoriser", "Réduire", "Simplifier"]
+  },
+  {
+    id: "fonctions", name: "Fonctions", emoji: "📈",
+    colorClass: "text-game-purple", borderClass: "border-game-purple", bgClass: "bg-game-purple",
+    prefixes: ["Fonction"]
+  },
+  {
+    id: "proportionnalite", name: "Proportionnalité & %", emoji: "⚖️",
+    colorClass: "text-game-coral", borderClass: "border-game-coral", bgClass: "bg-game-coral",
+    prefixes: ["Pourcentage", "Augmentation", "Proportionnalité", "Partage", "Vitesse",
+      "Probabilité", "Événement", "Conversions"]
+  },
+  {
+    id: "statistiques", name: "Statistiques", emoji: "📊",
+    colorClass: "text-game-pink", borderClass: "border-game-pink", bgClass: "bg-game-pink",
+    prefixes: ["Moyenne", "Médiane", "Étendue"]
+  },
+  {
+    id: "brevet", name: "Brevet", emoji: "🎓",
+    colorClass: "text-game-mint", borderClass: "border-game-mint", bgClass: "bg-game-mint",
+    prefixes: ["Brevet"]
+  },
+];
+
+export const MELANGE_THEME: ThemeConfig = {
+  id: "melange", name: "Toutes les notions", emoji: "🎲",
+  colorClass: "text-primary", borderClass: "border-primary", bgClass: "bg-primary",
+  prefixes: []
+};
+
+export function getThemeForCategory(category: string): ThemeConfig | undefined {
+  return THEMES.find(t => t.prefixes.some(p => category.startsWith(p)));
+}
 
 export function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function checkAnswer(userAnswer: string, correctAnswer: string): boolean {
+export function checkAnswer(userAnswer: string, correctAnswer: string, isQcm = false): boolean {
+  if (isQcm) {
+    return userAnswer.trim() === correctAnswer.trim();
+  }
   const clean = userAnswer.replace(",", ".").trim();
   const correct = parseFloat(correctAnswer);
   const user = parseFloat(clean);
