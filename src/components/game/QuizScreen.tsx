@@ -34,6 +34,9 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
   const [shake, setShake] = useState(false);
   const [wrongAnswer, setWrongAnswer] = useState(false);
   const [startTime] = useState(Date.now());
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const isQcm = !!question.options && question.options.length > 0;
 
   const handleKey = useCallback((key: string) => {
     if (wrongAnswer) return;
@@ -65,10 +68,30 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
     }
   }, [input, question, onAnswer, startTime, wrongAnswer]);
 
+  const handleQcmSelect = useCallback((option: string) => {
+    if (wrongAnswer || selectedOption) return;
+    setSelectedOption(option);
+    const correct = checkAnswer(option, question.answer, true);
+    if (correct) {
+      const elapsed = Date.now() - startTime;
+      setTimeout(() => onAnswer(true, elapsed, option), 300);
+    } else {
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+      setWrongAnswer(true);
+    }
+  }, [question, onAnswer, startTime, wrongAnswer, selectedOption]);
+
   const handleNext = useCallback(() => {
     const elapsed = Date.now() - startTime;
-    onAnswer(false, elapsed, input);
-  }, [onAnswer, startTime, input]);
+    onAnswer(false, elapsed, isQcm ? (selectedOption || "") : input);
+  }, [onAnswer, startTime, input, isQcm, selectedOption]);
+
+  // Shuffle options deterministically based on question text
+  const shuffledOptions = question.options ? [...question.options].sort(() => {
+    // Use a simple hash of the question text for stable shuffling
+    return 0; // Keep original order — already randomized at question creation
+  }) : [];
 
   return (
     <div className="animate-fade-in space-y-4">
@@ -89,17 +112,51 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
           </span>
         </div>
         <p className="text-2xl font-black text-center mb-4 leading-tight flex items-center justify-center flex-wrap gap-1">
-          {renderMathText(question.text)} <span>= ?</span>
+          {renderMathText(question.text)}
         </p>
-        <input
-          type="text"
-          readOnly
-          value={input}
-          className={`w-full bg-background/30 border-2 rounded-xl p-4 text-center
-            font-mono text-2xl font-bold text-foreground outline-none transition-colors
-            ${wrongAnswer ? "border-destructive/40 opacity-50" : "border-foreground/10 focus:border-primary/40"}`}
-          placeholder="?"
-        />
+
+        {/* QCM mode */}
+        {isQcm && (
+          <div className="grid grid-cols-1 gap-2 mt-4">
+            {shuffledOptions.map((opt, i) => {
+              const isSelected = selectedOption === opt;
+              const isCorrect = wrongAnswer && opt === question.answer;
+              const isWrong = isSelected && wrongAnswer;
+              return (
+                <button
+                  key={i}
+                  onPointerDown={(e) => { e.preventDefault(); handleQcmSelect(opt); }}
+                  disabled={wrongAnswer || !!selectedOption}
+                  className={`w-full text-left px-4 py-3.5 rounded-xl font-bold text-sm border-2 transition-all
+                    active:scale-[0.97] select-none
+                    ${isCorrect ? "border-green-500 bg-green-500/20 text-green-300" :
+                      isWrong ? "border-destructive bg-destructive/20 text-destructive" :
+                      isSelected ? "border-primary bg-primary/20" :
+                      "border-foreground/10 bg-foreground/5 hover:border-primary/30"}`}
+                  style={{ touchAction: "manipulation" }}
+                >
+                  <span className="font-mono text-xs text-muted-foreground mr-2">
+                    {String.fromCharCode(65 + i)}.
+                  </span>
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Numeric input mode */}
+        {!isQcm && (
+          <input
+            type="text"
+            readOnly
+            value={input}
+            className={`w-full bg-background/30 border-2 rounded-xl p-4 text-center
+              font-mono text-2xl font-bold text-foreground outline-none transition-colors
+              ${wrongAnswer ? "border-destructive/40 opacity-50" : "border-foreground/10 focus:border-primary/40"}`}
+            placeholder="?"
+          />
+        )}
       </div>
 
       {wrongAnswer && (
@@ -121,7 +178,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
         </div>
       )}
 
-      {!wrongAnswer && (
+      {!wrongAnswer && !isQcm && (
         <>
           <button
             onClick={onSkip}
@@ -131,6 +188,15 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
           </button>
           <Keypad onKey={handleKey} onDelete={handleDelete} onValidate={handleValidate} />
         </>
+      )}
+
+      {!wrongAnswer && isQcm && !selectedOption && (
+        <button
+          onClick={onSkip}
+          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+        >
+          Passer cette question →
+        </button>
       )}
     </div>
   );

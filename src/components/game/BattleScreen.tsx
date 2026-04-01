@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import { getDuelQuestion, checkAnswer } from "@/lib/questions";
-import type { Question, Grade } from "@/lib/questions";
+import type { Question, Grade, ThemeId } from "@/lib/questions";
 
 interface BattleScreenProps {
   grade: Grade;
+  themeId: ThemeId;
   onBack: () => void;
 }
 
@@ -23,11 +24,11 @@ const PLAYER_BORDERS = [
   "border-game-purple/30",
 ];
 
-const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
+const BattleScreen: React.FC<BattleScreenProps> = ({ grade, themeId, onBack }) => {
   const [phase, setPhase] = useState<"register" | "play" | "end">("register");
   const [names, setNames] = useState(["", "", "", ""]);
   const [scores, setScores] = useState([0, 0, 0, 0]);
-  const [question, setQuestion] = useState<Question>(() => getDuelQuestion(grade));
+  const [question, setQuestion] = useState<Question>(() => getDuelQuestion(grade, themeId));
   const [activePlayer, setActivePlayer] = useState<number | null>(null);
   const [input, setInput] = useState("");
   const [feedback, setFeedback] = useState<{ player: number; text: string } | null>(null);
@@ -37,15 +38,14 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const activePlayers = names.map((n, i) => ({ name: n, index: i })).filter(p => p.name.trim());
+  const isQcm = !!question.options && question.options.length > 0;
 
-  // Timer logic: starts when a player buzzes in
   useEffect(() => {
     if (activePlayer !== null && !feedback) {
       setTimer(ANSWER_TIME);
       timerRef.current = setInterval(() => {
         setTimer(prev => {
           if (prev <= 1) {
-            // Time's up — penalize and reset
             clearInterval(timerRef.current!);
             timerRef.current = null;
             setScores(s => {
@@ -97,15 +97,14 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
     }
   }, [activePlayer, input, feedback]);
 
-  const handleSubmit = useCallback(() => {
-    if (activePlayer === null || !input.trim() || feedback) return;
-
+  const processAnswer = useCallback((isCorrect: boolean) => {
+    if (activePlayer === null) return;
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
 
-    if (checkAnswer(input, question.answer)) {
+    if (isCorrect) {
       const newScores = [...scores];
       newScores[activePlayer] += 1;
       setScores(newScores);
@@ -120,7 +119,7 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
       }
 
       setTimeout(() => {
-        setQuestion(getDuelQuestion(grade));
+        setQuestion(getDuelQuestion(grade, themeId));
         setInput("");
         setActivePlayer(null);
         setFeedback(null);
@@ -137,7 +136,17 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
         setFeedback(null);
       }, 1200);
     }
-  }, [activePlayer, input, question, scores, names, grade, feedback]);
+  }, [activePlayer, scores, names, grade, themeId]);
+
+  const handleSubmit = useCallback(() => {
+    if (activePlayer === null || !input.trim() || feedback) return;
+    processAnswer(checkAnswer(input, question.answer));
+  }, [activePlayer, input, question, feedback, processAnswer]);
+
+  const handleQcmSelect = useCallback((option: string) => {
+    if (activePlayer === null || feedback) return;
+    processAnswer(checkAnswer(option, question.answer, true));
+  }, [activePlayer, question, feedback, processAnswer]);
 
   // Registration phase
   if (phase === "register") {
@@ -229,7 +238,7 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
         <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mb-1">
           Q{questionNum} · {question.category}
         </p>
-        <p className="font-mono text-xl font-black">{question.text} = ?</p>
+        <p className="font-mono text-xl font-black">{question.text} {!isQcm && "= ?"}</p>
       </div>
 
       {/* Feedback */}
@@ -271,34 +280,57 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, onBack }) => {
               {timer}s
             </div>
           </div>
-          <div className="font-mono text-2xl bg-foreground/5 rounded-xl px-4 py-3 mb-3 text-center font-bold">
-            {input || "?"}
-          </div>
-          <div className="grid grid-cols-4 gap-1.5 mb-2" style={{ touchAction: "manipulation" }}>
-            {keys.map((k, i) => (
-              <button key={i}
-                onPointerDown={(e) => { e.preventDefault(); handleKey(k.l); }}
-                className="py-3 rounded-lg bg-foreground/5 font-mono font-bold text-base
-                  text-foreground active:scale-90 transition-all select-none"
-                style={{ touchAction: "manipulation" }}>
-                {k.l}
-              </button>
-            ))}
-          </div>
-          <div className="grid grid-cols-3 gap-1.5" style={{ touchAction: "manipulation" }}>
-            <button
-              onPointerDown={(e) => { e.preventDefault(); handleKey("del"); }}
-              className="py-3 rounded-lg bg-destructive/20 text-destructive font-mono font-bold select-none"
-              style={{ touchAction: "manipulation" }}>
-              ⌫
-            </button>
-            <button
-              onPointerDown={(e) => { e.preventDefault(); handleSubmit(); }}
-              className="py-3 rounded-lg bg-game-mint text-background font-black text-sm col-span-2 active:scale-[0.97] select-none"
-              style={{ touchAction: "manipulation" }}>
-              ✓ VALIDER
-            </button>
-          </div>
+
+          {isQcm ? (
+            <div className="grid grid-cols-1 gap-2 mb-3">
+              {(question.options || []).map((opt, i) => (
+                <button
+                  key={i}
+                  onPointerDown={(e) => { e.preventDefault(); handleQcmSelect(opt); }}
+                  className="w-full text-left px-4 py-3 rounded-xl font-bold text-sm border-2
+                    border-foreground/10 bg-foreground/5 hover:border-primary/30 active:scale-[0.97]
+                    transition-all select-none"
+                  style={{ touchAction: "manipulation" }}
+                >
+                  <span className="font-mono text-xs text-muted-foreground mr-2">
+                    {String.fromCharCode(65 + i)}.
+                  </span>
+                  {opt}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="font-mono text-2xl bg-foreground/5 rounded-xl px-4 py-3 mb-3 text-center font-bold">
+                {input || "?"}
+              </div>
+              <div className="grid grid-cols-4 gap-1.5 mb-2" style={{ touchAction: "manipulation" }}>
+                {keys.map((k, i) => (
+                  <button key={i}
+                    onPointerDown={(e) => { e.preventDefault(); handleKey(k.l); }}
+                    className="py-3 rounded-lg bg-foreground/5 font-mono font-bold text-base
+                      text-foreground active:scale-90 transition-all select-none"
+                    style={{ touchAction: "manipulation" }}>
+                    {k.l}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-3 gap-1.5" style={{ touchAction: "manipulation" }}>
+                <button
+                  onPointerDown={(e) => { e.preventDefault(); handleKey("del"); }}
+                  className="py-3 rounded-lg bg-destructive/20 text-destructive font-mono font-bold select-none"
+                  style={{ touchAction: "manipulation" }}>
+                  ⌫
+                </button>
+                <button
+                  onPointerDown={(e) => { e.preventDefault(); handleSubmit(); }}
+                  className="py-3 rounded-lg bg-game-mint text-background font-black text-sm col-span-2 active:scale-[0.97] select-none"
+                  style={{ touchAction: "manipulation" }}>
+                  ✓ VALIDER
+                </button>
+              </div>
+            </>
+          )}
         </div>
       )}
 

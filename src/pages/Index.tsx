@@ -6,8 +6,8 @@ import ResultsScreen from "@/components/game/ResultsScreen";
 import type { AnswerRecord } from "@/components/game/ResultsScreen";
 import DuelScreen from "@/components/game/DuelScreen";
 import BattleScreen from "@/components/game/BattleScreen";
-import { getRandomQuestions, getQuestionsByCategory } from "@/lib/questions";
-import type { Question, Grade } from "@/lib/questions";
+import { getRandomQuestions } from "@/lib/questions";
+import type { Question, Grade, ThemeId } from "@/lib/questions";
 import { useProgress } from "@/hooks/useProgress";
 
 type Screen = "menu" | "quiz" | "results" | "duel" | "battle";
@@ -17,6 +17,7 @@ const EXAM_DURATION_S = 9 * 60;
 const Index: React.FC = () => {
   const [screen, setScreen] = useState<Screen>("menu");
   const [grade, setGrade] = useState<Grade>("3eme");
+  const [themeId, setThemeId] = useState<ThemeId>("melange");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQ, setCurrentQ] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -56,49 +57,32 @@ const Index: React.FC = () => {
     setAnswers([]);
   };
 
-  const startTraining = useCallback((category: string | null) => {
+  const startTraining = useCallback((selectedThemeId: ThemeId) => {
     setIsExam(false);
-    setQuestions(category ? getQuestionsByCategory(category, grade) : getRandomQuestions(20, grade));
+    setThemeId(selectedThemeId);
+    setQuestions(getRandomQuestions(20, grade, selectedThemeId));
     resetQuiz();
     setScreen("quiz");
   }, [grade]);
 
-  const startExam = useCallback(() => {
+  const startExam = useCallback((selectedThemeId: ThemeId) => {
     setIsExam(true);
-    setQuestions(getRandomQuestions(20, grade));
+    setThemeId(selectedThemeId);
+    setQuestions(getRandomQuestions(20, grade, selectedThemeId));
     resetQuiz();
     setTimerLeft(EXAM_DURATION_S);
     setScreen("quiz");
   }, [grade]);
 
-  const startDuel = useCallback(() => setScreen("duel"), []);
-  const startBattle = useCallback(() => setScreen("battle"), []);
+  const startDuel = useCallback((selectedThemeId: ThemeId) => {
+    setThemeId(selectedThemeId);
+    setScreen("duel");
+  }, []);
 
-  const handleAnswer = useCallback((isCorrect: boolean, timeMs: number) => {
-    const q = questions[currentQ];
-    // We need the user's input — stored via QuizScreen's onAnswer
-    // For now we reconstruct from correctness
-    setAnswers(prev => [...prev, {
-      question: q,
-      userAnswer: "", // will be set by enhanced onAnswer
-      correct: isCorrect,
-      timeMs,
-    }]);
-
-    if (isCorrect) {
-      setCorrect(prev => prev + 1);
-      addXp(10);
-    }
-    recordAnswer(q.category, isCorrect);
-    setTimes(prev => [...prev, timeMs]);
-
-    if (currentQ + 1 >= questions.length) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      setScreen("results");
-    } else {
-      setCurrentQ(prev => prev + 1);
-    }
-  }, [currentQ, questions, addXp, recordAnswer]);
+  const startBattle = useCallback((selectedThemeId: ThemeId) => {
+    setThemeId(selectedThemeId);
+    setScreen("battle");
+  }, []);
 
   const handleAnswerWithInput = useCallback((isCorrect: boolean, timeMs: number, userInput: string) => {
     const q = questions[currentQ];
@@ -147,8 +131,8 @@ const Index: React.FC = () => {
     setScreen("menu");
   }, []);
 
-  if (screen === "duel") return <DuelScreen grade={grade} onBack={goHome} />;
-  if (screen === "battle") return <BattleScreen grade={grade} onBack={goHome} />;
+  if (screen === "duel") return <DuelScreen grade={grade} themeId={themeId} onBack={goHome} />;
+  if (screen === "battle") return <BattleScreen grade={grade} themeId={themeId} onBack={goHome} />;
 
   const avgTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.filter(t => t > 0).length : 0;
 
