@@ -1,6 +1,7 @@
-export type { Question, Grade } from "./types";
-export { checkAnswer } from "./types";
-import type { Question, Grade } from "./types";
+export type { Question, Grade, ThemeId, ThemeConfig } from "./types";
+export { checkAnswer, THEMES, MELANGE_THEME, getThemeForCategory } from "./types";
+import type { Question, Grade, ThemeId } from "./types";
+import { THEMES } from "./types";
 import { get3emeQuestions } from "./3eme";
 
 // Categories exclusive to 3ème (not studied in 4ème)
@@ -44,8 +45,16 @@ function shuffleQuestions(questions: Question[]): Question[] {
 function getAllQuestions(grade: Grade = "3eme"): Question[] {
   const all = withQuestionIds(get3emeQuestions());
   if (grade === "3eme") return all;
-  // For 4ème: filter out 3ème-only and Brevet categories
   return all.filter(q => !TROISIEME_ONLY_CATEGORIES.has(q.category) && !isBrevet(q.category));
+}
+
+function getQuestionsByTheme(themeId: ThemeId, grade: Grade = "3eme"): Question[] {
+  if (themeId === "melange") return getAllQuestions(grade);
+  const theme = THEMES.find(t => t.id === themeId);
+  if (!theme) return getAllQuestions(grade);
+  return getAllQuestions(grade).filter(q =>
+    theme.prefixes.some(p => q.category.startsWith(p))
+  );
 }
 
 export function getCategories(grade: Grade = "3eme"): { name: string; count: number }[] {
@@ -61,12 +70,16 @@ export function getQuestionsByCategory(category: string, grade: Grade = "3eme"):
   return shuffleQuestions(getAllQuestions(grade).filter(q => q.category === category));
 }
 
-export function getRandomQuestions(count: number, grade: Grade = "3eme"): Question[] {
-  const shuffled = shuffleQuestions(getAllQuestions(grade));
-  return shuffled.slice(0, count);
+export function getRandomQuestions(count: number, grade: Grade = "3eme", themeId: ThemeId = "melange"): Question[] {
+  const pool = getQuestionsByTheme(themeId, grade);
+  return shuffleQuestions(pool).slice(0, count);
 }
 
-export function getDuelQuestion(grade: Grade = "3eme"): Question {
-  const all = getAllQuestions(grade);
-  return all[Math.floor(Math.random() * all.length)];
+export function getDuelQuestion(grade: Grade = "3eme", themeId: ThemeId = "melange"): Question {
+  const pool = getQuestionsByTheme(themeId, grade);
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+export function getThemeQuestionCount(themeId: ThemeId, grade: Grade = "3eme"): number {
+  return getQuestionsByTheme(themeId, grade).length;
 }
