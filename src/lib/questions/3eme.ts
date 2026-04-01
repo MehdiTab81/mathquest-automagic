@@ -722,5 +722,70 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "Remise 15 % sur 55 € ?", answer: "46.75", category: "Brevet – Pourcentages", hint: "55 × 0,85 = 46,75" });
   qs.push({ text: "PGCD(350, 300) ?", answer: "50", category: "Brevet – PGCD", hint: "350 = 2×5²×7, 300 = 2²×3×5² → 2×5²" });
 
+  // ═══════════════════════════════════════════════════════════
+  // Calcul littéral – Substitution (évaluer une expression)
+  // ═══════════════════════════════════════════════════════════
+  const clSub: [string, number, string][] = [
+    // Simple distributivité
+    ["5(3x + 2) pour x = 1", 25, "5(3+2) = 5×5"],
+    ["−3(2x − 5) pour x = 2", 3, "−3(4−5) = −3×(−1)"],
+    ["5x(−3x + 2) pour x = 1", -5, "5(−3+2) = 5×(−1)"],
+    ["−4(5x − 2) pour x = 1", -12, "−4(5−2) = −4×3"],
+    ["3(x + 4) pour x = 2", 18, "3×6 = 18"],
+    ["−2(x − 4) pour x = 3", 2, "−2(−1) = 2"],
+    ["−6(2 − 3x) pour x = 1", 6, "−6(2−3) = −6×(−1)"],
+    // Développer et réduire
+    ["3(2x − 4) + 5(3 − x) pour x = 2", 7, "6×2−12+15−5×2 = 12−12+15−10"],
+    ["2x(5 + 3x) − 4(x + 5) pour x = 1", -4, "2(8)−4(6) = 16−24"],
+    ["A = x² + 6x pour x = 3", 27, "9 + 18 = 27"],
+    ["A = 7x² − 35 pour x = 3", 28, "63 − 35 = 28"],
+    // Carrés
+    ["(2x)² pour x = 3", 36, "6² = 36"],
+    ["(−3x)² pour x = 2", 36, "(−6)² = 36"],
+    ["−(3x)² pour x = 2", -36, "−(6²) = −36"],
+    // Substitution simple
+    ["A = 5x − 3 pour x = −2", -13, "5×(−2) − 3"],
+    ["A = −x² + 4 pour x = 3", -5, "−9 + 4"],
+    ["A = 2x² + x − 1 pour x = 2", 9, "8 + 2 − 1"],
+    ["A = (x + 3)(x − 1) pour x = 4", 21, "7 × 3"],
+    ["A = (2x − 1)² pour x = 2", 9, "(4−1)² = 3²"],
+    ["A = x² − 4x + 4 pour x = 5", 9, "25 − 20 + 4"],
+  ];
+  clSub.forEach(([t, r, h]) =>
+    qs.push({ text: t, answer: String(r), category: "Calcul littéral", hint: h })
+  );
+
+  // ═══════════════════════════════════════════════════════════
+  // Calcul littéral – Programme de calcul algébrique
+  // ═══════════════════════════════════════════════════════════
+  const clProg: [string, number, string][] = [
+    ["Choisir 5, retirer 10, ×2, +20", 10, "(5−10)×2+20 = −10+20"],
+    ["Choisir 20, retirer 10, ×2, +20", 40, "(20−10)×2+20 = 20+20"],
+    ["Choisir −8, retirer 10, ×2, +20", -16, "(−8−10)×2+20 = −36+20"],
+    ["Choisir 4, ×3, +5. Résultat ?", 17, "4×3+5"],
+    ["Choisir 7, ×3, +5. Résultat ?", 26, "7×3+5"],
+    ["Choisir 10, ×3, +5. Résultat ?", 35, "10×3+5"],
+    ["Choisir 10, +5, ×3. Résultat ?", 45, "(10+5)×3"],
+    ["Choisir 4, +5, ×3. Résultat ?", 27, "(4+5)×3"],
+  ];
+  clProg.forEach(([t, r, h]) =>
+    qs.push({ text: t, answer: String(r), category: "Calcul littéral", hint: h })
+  );
+
+  // ═══════════════════════════════════════════════════════════
+  // Calcul littéral – Tester une égalité
+  // Répondre 1 si vrai, 0 si faux
+  // ═══════════════════════════════════════════════════════════
+  const clTest: [string, number, string][] = [
+    ["x = 3 vérifie-t-il 2x + 1 = 7 ? (1=oui, 0=non)", 1, "2×3+1 = 7 ✓"],
+    ["x = 4 vérifie-t-il 3x − 5 = 6 ? (1=oui, 0=non)", 0, "3×4−5 = 7 ≠ 6"],
+    ["x = 2 vérifie-t-il x² + x = 6 ? (1=oui, 0=non)", 1, "4+2 = 6 ✓"],
+    ["x = 5 vérifie-t-il 4x − 3 = 18 ? (1=oui, 0=non)", 0, "4×5−3 = 17 ≠ 18"],
+    ["x = −1 vérifie-t-il x² − 1 = 0 ? (1=oui, 0=non)", 1, "1−1 = 0 ✓"],
+  ];
+  clTest.forEach(([t, r, h]) =>
+    qs.push({ text: t, answer: String(r), category: "Calcul littéral", hint: h })
+  );
+
   return qs;
 }
