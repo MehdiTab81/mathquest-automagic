@@ -283,7 +283,7 @@ const BattleScreen: React.FC<BattleScreenProps> = ({ grade, themeId, onBack }) =
 
           {isQcm ? (
             <div className="grid grid-cols-1 gap-2 mb-3">
-              {(question.options || []).map((opt, i) => (
+              {seededShuffle(question.options || [], question.text).map((opt, i) => (
                 <button
                   key={i}
                   onPointerDown={(e) => { e.preventDefault(); handleQcmSelect(opt); }}
