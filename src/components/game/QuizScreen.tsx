@@ -27,9 +27,10 @@ interface QuizScreenProps {
   totalQuestions: number;
   onAnswer: (correct: boolean, timeMs: number, userInput: string) => void;
   onSkip: () => void;
+  onQuit: () => void;
 }
 
-const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQuestions, onAnswer, onSkip }) => {
+const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQuestions, onAnswer, onSkip, onQuit }) => {
   const [input, setInput] = useState("");
   const [shake, setShake] = useState(false);
   const [wrongAnswer, setWrongAnswer] = useState(false);
@@ -92,45 +93,75 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
     : [];
 
   return (
-    <div className="animate-fade-in space-y-4">
-      <div className={`bg-card rounded-lg p-5 border border-foreground/10 ${shake ? "animate-shake" : ""}`}>
-        <div className="flex justify-between items-start mb-3 gap-3">
-          <div>
-            <span className="block text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              {question.category}
-            </span>
-            {question.id !== undefined && (
-              <span className="mt-1 block font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
-                Question #{question.id}
-              </span>
-            )}
-          </div>
-          <span className="font-mono text-xs text-muted-foreground">
-            {questionIndex + 1}/{totalQuestions}
-          </span>
-        </div>
-        <p className="text-2xl font-black text-center mb-4 leading-tight flex items-center justify-center flex-wrap gap-1">
+    <div
+      className="fixed inset-0 flex flex-col select-none overflow-hidden bg-background z-50"
+      style={{ touchAction: "manipulation" }}
+    >
+      {/* Top bar: quit + progress */}
+      <div className="flex-shrink-0 flex items-center justify-between px-3 pt-2 pb-1">
+        <button
+          onPointerDown={(e) => { e.preventDefault(); onQuit(); }}
+          className="text-xs font-bold text-muted-foreground bg-card border border-foreground/10 rounded-full px-3 py-1
+            active:scale-95 transition-all"
+          style={{ touchAction: "manipulation" }}
+        >
+          ✕ Quitter
+        </button>
+        <span className="font-mono text-xs text-muted-foreground">
+          {questionIndex + 1}/{totalQuestions}
+        </span>
+      </div>
+
+      {/* Question area - compact */}
+      <div className={`flex-shrink-0 px-4 py-2 ${shake ? "animate-shake" : ""}`}>
+        <span className="block text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-1">
+          {question.category}
+          {question.id !== undefined && (
+            <span className="ml-2 font-mono text-primary">#{question.id}</span>
+          )}
+        </span>
+        <p className="text-xl font-black text-center leading-tight flex items-center justify-center flex-wrap gap-1">
           {renderMathText(question.text)}
         </p>
+      </div>
 
+      {/* Wrong answer feedback */}
+      {wrongAnswer && (
+        <div className="flex-shrink-0 mx-3 bg-destructive/10 border-l-4 border-destructive p-3 rounded-lg animate-fade-in">
+          <p className="text-sm font-bold">❌ Réponse incorrecte</p>
+          <p className="text-sm">
+            Réponse : <strong className="font-mono text-base">{question.answer}</strong>
+          </p>
+          {question.hint && (
+            <p className="text-xs text-muted-foreground mt-1">💡 {question.hint}</p>
+          )}
+          <button
+            onPointerDown={(e) => { e.preventDefault(); handleNext(); }}
+            className="mt-2 w-full bg-primary text-primary-foreground font-black py-2.5 rounded-lg
+              text-sm active:scale-[0.97] transition-all"
+            style={{ touchAction: "manipulation" }}
+          >
+            Suivante →
+          </button>
+        </div>
+      )}
+
+      {/* Main content area - fills remaining space */}
+      <div className="flex-1 flex flex-col min-h-0">
         {/* QCM mode */}
-        {isQcm && (
-          <div className="grid grid-cols-1 gap-2 mt-4">
+        {isQcm && !wrongAnswer && (
+          <div className="flex-1 flex flex-col justify-center px-3 gap-2">
             {shuffledOptions.map((opt, i) => {
               const isSelected = selectedOption === opt;
-              const isCorrect = wrongAnswer && opt === question.answer;
-              const isWrong = isSelected && wrongAnswer;
               return (
                 <button
                   key={i}
                   onPointerDown={(e) => { e.preventDefault(); handleQcmSelect(opt); }}
                   disabled={wrongAnswer || !!selectedOption}
-                  className={`w-full text-left px-4 py-3.5 rounded-xl font-bold text-sm border-2 transition-all
+                  className={`w-full text-left px-4 py-4 rounded-xl font-bold text-sm border-2 transition-all
                     active:scale-[0.97] select-none
-                    ${isCorrect ? "border-green-500 bg-green-500/20 text-green-300" :
-                      isWrong ? "border-destructive bg-destructive/20 text-destructive" :
-                      isSelected ? "border-primary bg-primary/20" :
-                      "border-foreground/10 bg-foreground/5 hover:border-primary/30"}`}
+                    ${isSelected ? "border-primary bg-primary/20" :
+                      "border-foreground/10 bg-foreground/5"}`}
                   style={{ touchAction: "manipulation" }}
                 >
                   <span className="font-mono text-xs text-muted-foreground mr-2">
@@ -140,62 +171,46 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
                 </button>
               );
             })}
+            <button
+              onPointerDown={(e) => { e.preventDefault(); onSkip(); }}
+              className="text-sm text-muted-foreground py-2"
+              style={{ touchAction: "manipulation" }}
+            >
+              Passer →
+            </button>
           </div>
         )}
 
         {/* Numeric input mode */}
-        {!isQcm && (
-          <input
-            type="text"
-            readOnly
-            value={input}
-            className={`w-full bg-background/30 border-2 rounded-xl p-4 text-center
-              font-mono text-2xl font-bold text-foreground outline-none transition-colors
-              ${wrongAnswer ? "border-destructive/40 opacity-50" : "border-foreground/10 focus:border-primary/40"}`}
-            placeholder="?"
-          />
+        {!isQcm && !wrongAnswer && (
+          <>
+            {/* Input display */}
+            <div className="flex-shrink-0 px-4 py-1">
+              <div className={`w-full bg-background/30 border-2 rounded-xl p-3 text-center
+                font-mono text-2xl font-bold text-foreground
+                ${wrongAnswer ? "border-destructive/40 opacity-50" : "border-foreground/10"}`}>
+                {input || "?"}
+              </div>
+            </div>
+
+            {/* Skip button */}
+            <div className="flex-shrink-0 text-center">
+              <button
+                onPointerDown={(e) => { e.preventDefault(); onSkip(); }}
+                className="text-xs text-muted-foreground py-1"
+                style={{ touchAction: "manipulation" }}
+              >
+                Passer →
+              </button>
+            </div>
+
+            {/* Keypad - fills all remaining space */}
+            <div className="flex-1 min-h-0 px-2 pb-2">
+              <Keypad onKey={handleKey} onDelete={handleDelete} onValidate={handleValidate} fullHeight />
+            </div>
+          </>
         )}
       </div>
-
-      {wrongAnswer && (
-        <div className="bg-destructive/10 border-l-4 border-destructive p-4 rounded-[10px] animate-fade-in">
-          <p className="text-sm font-bold mb-1">❌ Réponse incorrecte</p>
-          <p className="text-sm">
-            La bonne réponse est <strong className="font-mono text-base">{question.answer}</strong>
-          </p>
-          {question.hint && (
-            <p className="text-xs text-muted-foreground mt-1">💡 {question.hint}</p>
-          )}
-          <button
-            onClick={handleNext}
-            className="mt-3 w-full bg-primary text-primary-foreground font-black py-3 rounded-lg
-              text-sm transition-all active:scale-[0.97]"
-          >
-            Question suivante →
-          </button>
-        </div>
-      )}
-
-      {!wrongAnswer && !isQcm && (
-        <>
-          <button
-            onClick={onSkip}
-            className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-          >
-            Passer cette question →
-          </button>
-          <Keypad onKey={handleKey} onDelete={handleDelete} onValidate={handleValidate} />
-        </>
-      )}
-
-      {!wrongAnswer && isQcm && !selectedOption && (
-        <button
-          onClick={onSkip}
-          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
-        >
-          Passer cette question →
-        </button>
-      )}
     </div>
   );
 };
