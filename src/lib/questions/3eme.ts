@@ -474,9 +474,9 @@ export function get3emeQuestions(): Question[] {
   // ═══════════════════════════════════════════════════════════
   const c1: [string, number, string][] = [
     ["3 km en m", 3000, "× 1000"], ["5 m en cm", 500, "× 100"],
-    ["2000 m en km", 2, "÷ 1000"], ["150 cm en m", 1.5, "÷ 100"],
-    ["4 kg en g", 4000, "× 1000"], ["500 g en kg", 0.5, "÷ 1000"],
-    ["2 L en mL", 2000, "× 1000"], ["3500 mL en L", 3.5, "÷ 1000"],
+    ["2000 m en km", 2, "÷ 1000"], ["150 cm en m (décimal)", 1.5, "÷ 100"],
+    ["4 kg en g", 4000, "× 1000"], ["500 g en kg (décimal)", 0.5, "÷ 1000"],
+    ["2 L en mL", 2000, "× 1000"], ["3500 mL en L (décimal)", 3.5, "÷ 1000"],
   ];
   c1.forEach(([t, r, h]) =>
     qs.push({ text: t, answer: String(r), category: "Conversions d'unités", hint: h })
