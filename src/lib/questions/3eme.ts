@@ -662,7 +662,7 @@ export function get3emeQuestions(): Question[] {
   // ── Métropole juillet 2024 (QCM) ────────────────────────
   qs.push({ text: "f(x) = 3x − 2. f(−4) = ?", answer: "-14", category: "Brevet – Fonctions", hint: "3×(−4) − 2 = −12 − 2" });
   qs.push({ text: "(−5)³ = ?", answer: "-125", category: "Brevet – Puissances", hint: "(−5)×(−5)×(−5)" });
-  qs.push({ text: "Médiane : 1,46 ; 1,6 ; 1,65 ; 1,67 ; 1,7 ; 1,72 ; 1,75 ?", answer: "1.67", category: "Brevet – Statistiques", hint: "7 valeurs → 4e" });
+  qs.push({ text: "Médiane : 1,46 ; 1,6 ; 1,65 ; 1,67 ; 1,7 ; 1,72 ; 1,75 ? (décimal)", answer: "1.67", category: "Brevet – Statistiques", hint: "7 valeurs → 4e" });
 
   // PGCD – Métropole 2024
   qs.push({ text: "PGCD(330, 132) ?", answer: "66", category: "Brevet – PGCD", hint: "330 = 2×3×5×11, 132 = 2²×3×11 → 2×3×11" });
