@@ -569,7 +569,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "f(x) = 2x − 8. Résultat = 100. x = ?", answer: "54", category: "Brevet – Équations", hint: "2x − 8 = 100 → 2x = 108 → x = 54" });
 
   // Dé 12 faces
-  qs.push({ text: "Dé 12 faces. Proba d'un nombre pair ?", answer: "0.5", category: "Brevet – Probabilités", hint: "6 pairs sur 12" });
+  qs.push({ text: "Dé 12 faces. Proba d'un nombre pair ? (décimal)", answer: "0.5", category: "Brevet – Probabilités", hint: "6 pairs sur 12" });
 
   // ── Brevet 2025 – Polynésie septembre (QCM) ───────────────
   qs.push({ text: "Formule p = 1,5(L+1). Pour L = 25, p = ?", answer: "39", category: "Brevet – Substitution", hint: "1,5 × 26 = 39" });
