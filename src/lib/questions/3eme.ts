@@ -610,7 +610,7 @@ export function get3emeQuestions(): Question[] {
   // Métropole 2025 – exercice 4
   qs.push({ text: "Choisir 10, −4, ×2, +8. Résultat ?", answer: "20", category: "Brevet – Programme de calcul", hint: "(10−4)×2+8 = 12+8" });
   qs.push({ text: "Choisir −7, −4, ×2, +8. Résultat ?", answer: "-14", category: "Brevet – Programme de calcul", hint: "(−7−4)×2+8 = −22+8" });
-  qs.push({ text: "20x + 50 = 75. x = ?", answer: "1.25", category: "Brevet – Équations", hint: "20x = 25 → x = 1,25" });
+  qs.push({ text: "20x + 50 = 75. x = ? (décimal)", answer: "1.25", category: "Brevet – Équations", hint: "20x = 25 → x = 1,25" });
 
   // Polynésie sept 2025 – exercice 1
   qs.push({ text: "f(x) = 80x. Antécédent de 2400 ?", answer: "30", category: "Brevet – Fonctions", hint: "2400 ÷ 80 = 30" });
