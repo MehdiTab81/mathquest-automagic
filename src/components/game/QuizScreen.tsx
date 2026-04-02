@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import Keypad from "./Keypad";
-import { checkAnswer } from "@/lib/questions";
+import { checkAnswer, seededShuffle } from "@/lib/questions";
 import type { Question } from "@/lib/questions";
 
 /** Renders fraction patterns like "3/4" as horizontal fraction bars */
