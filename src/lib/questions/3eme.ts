@@ -682,7 +682,7 @@ export function get3emeQuestions(): Question[] {
 
   // ── Métropole septembre 2024 ───────────────────────────────
   qs.push({ text: "2² × 5 × 13 = ?", answer: "260", category: "Brevet – Arithmétique", hint: "4 × 5 × 13 = 260" });
-  qs.push({ text: "7x + 5 = 2x − 2. x = ?", answer: "-1.4", category: "Brevet – Équations", hint: "5x = −7 → x = −7/5" });
+  qs.push({ text: "7x + 5 = 2x − 2. x = ? (décimal)", answer: "-1.4", category: "Brevet – Équations", hint: "5x = −7 → x = −7/5 = −1,4" });
   qs.push({ text: "5 m/s en km/h ?", answer: "18", category: "Brevet – Conversions", hint: "5 × 3,6 = 18" });
 
   // Statistiques – Métropole sept 2024
