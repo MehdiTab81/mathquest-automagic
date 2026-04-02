@@ -677,7 +677,7 @@ export function get3emeQuestions(): Question[] {
 
   // ── Polynésie septembre 2024 ───────────────────────────────
   qs.push({ text: "Écriture scientifique de 0,000 002 76. Exposant ?", answer: "-6", category: "Brevet – Notation scientifique", hint: "2,76 × 10⁻⁶" });
-  qs.push({ text: "(2x−7)(3x+1) = 0. Plus grande solution ?", answer: "3.5", category: "Brevet – Équations produit", hint: "2x−7 = 0 → x = 3,5" });
+  qs.push({ text: "(2x−7)(3x+1) = 0. Plus grande solution ? (décimal)", answer: "3.5", category: "Brevet – Équations produit", hint: "2x−7 = 0 → x = 3,5" });
   qs.push({ text: "f(x) = 5x² + 2. f(−3) = ?", answer: "47", category: "Brevet – Fonctions", hint: "5×9 + 2 = 47" });
 
   // ── Métropole septembre 2024 ───────────────────────────────
