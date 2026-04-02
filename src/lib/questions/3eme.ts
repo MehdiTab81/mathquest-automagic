@@ -438,9 +438,9 @@ export function get3emeQuestions(): Question[] {
   // Pb4 – Événement contraire
   // ═══════════════════════════════════════════════════════════
   const pb4: [string, string, string][] = [
-    ["P(A) = 0,3. P(contraire) = ?", "0.7", "1 − 0,3"],
-    ["P(A) = 0,85. P(contraire) = ?", "0.15", "1 − 0,85"],
-    ["P(A) = 1/4. P(contraire) = ?", "0.75", "1 − 0,25 = 0,75"],
+    ["P(A) = 0,3. P(contraire) = ? (décimal)", "0.7", "1 − 0,3"],
+    ["P(A) = 0,85. P(contraire) = ? (décimal)", "0.15", "1 − 0,85"],
+    ["P(A) = 1/4. P(contraire) = ? (décimal)", "0.75", "1 − 0,25 = 0,75"],
   ];
   pb4.forEach(([t, r, h]) =>
     qs.push({ text: t, answer: r, category: "Événement contraire", hint: h })
