@@ -175,6 +175,7 @@ const Index: React.FC = () => {
             totalQuestions={questions.length}
             onAnswer={handleAnswerWithInput}
             onSkip={handleSkip}
+            onQuit={goHome}
           />
         )}
 
