@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import { getDuelQuestion, checkAnswer } from "@/lib/questions";
+import { getDuelQuestion, checkAnswer, seededShuffle } from "@/lib/questions";
 import type { Question, Grade, ThemeId } from "@/lib/questions";
 
 interface DuelScreenProps {
