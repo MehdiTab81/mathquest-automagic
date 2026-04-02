@@ -57,11 +57,11 @@ export function get3emeQuestions(): Question[] {
   // N5 – Additionner, soustraire deux rationnels
   // ═══════════════════════════════════════════════════════════
   const n5: [string, string, string][] = [
-    ["1/4 + 2/4", "0.75", "= 3/4"],
-    ["3/5 + 1/5", "0.8", "= 4/5"],
-    ["7/8 − 3/8", "0.5", "= 4/8 = 1/2"],
-    ["3/4 − 1/4", "0.5", "= 2/4 = 1/2"],
-    ["1/3 + 1/6", "0.5", "= 2/6 + 1/6 = 3/6 = 1/2"],
+    ["1/4 + 2/4 (résultat décimal)", "0.75", "= 3/4 = 0,75"],
+    ["3/5 + 1/5 (résultat décimal)", "0.8", "= 4/5 = 0,8"],
+    ["7/8 − 3/8 (résultat décimal)", "0.5", "= 4/8 = 1/2 = 0,5"],
+    ["3/4 − 1/4 (résultat décimal)", "0.5", "= 2/4 = 1/2 = 0,5"],
+    ["1/3 + 1/6 (résultat décimal)", "0.5", "= 2/6 + 1/6 = 3/6 = 1/2 = 0,5"],
     ["3/4 + 1/4", "1", "= 4/4 = 1"],
     ["5/8 + 3/8", "1", "= 8/8 = 1"],
   ];
@@ -424,11 +424,11 @@ export function get3emeQuestions(): Question[] {
   // Pb2 – Probabilités simples (réponses décimales propres)
   // ═══════════════════════════════════════════════════════════
   const pb2: [string, string, string][] = [
-    ["Proba pile avec une pièce", "0.5", "= 1/2"],
-    ["Proba pair sur un dé", "0.5", "= 3/6"],
-    ["Proba carte cœur (jeu de 32)", "0.25", "= 8/32"],
-    ["Proba boule rouge : 3 rouges sur 10", "0.3", "= 3/10"],
-    ["Proba boule bleue : 1 sur 4", "0.25", "= 1/4"],
+    ["Proba pile avec une pièce (décimal)", "0.5", "= 1/2 = 0,5"],
+    ["Proba pair sur un dé (décimal)", "0.5", "= 3/6 = 0,5"],
+    ["Proba carte cœur (jeu de 32) (décimal)", "0.25", "= 8/32 = 0,25"],
+    ["Proba boule rouge : 3 rouges sur 10 (décimal)", "0.3", "= 3/10 = 0,3"],
+    ["Proba boule bleue : 1 sur 4 (décimal)", "0.25", "= 1/4 = 0,25"],
   ];
   pb2.forEach(([t, r, h]) =>
     qs.push({ text: t, answer: r, category: "Probabilité simple", hint: h })
@@ -438,9 +438,9 @@ export function get3emeQuestions(): Question[] {
   // Pb4 – Événement contraire
   // ═══════════════════════════════════════════════════════════
   const pb4: [string, string, string][] = [
-    ["P(A) = 0,3. P(contraire) = ?", "0.7", "1 − 0,3"],
-    ["P(A) = 0,85. P(contraire) = ?", "0.15", "1 − 0,85"],
-    ["P(A) = 1/4. P(contraire) = ?", "0.75", "1 − 0,25 = 0,75"],
+    ["P(A) = 0,3. P(contraire) = ? (décimal)", "0.7", "1 − 0,3"],
+    ["P(A) = 0,85. P(contraire) = ? (décimal)", "0.15", "1 − 0,85"],
+    ["P(A) = 1/4. P(contraire) = ? (décimal)", "0.75", "1 − 0,25 = 0,75"],
   ];
   pb4.forEach(([t, r, h]) =>
     qs.push({ text: t, answer: r, category: "Événement contraire", hint: h })
@@ -474,9 +474,9 @@ export function get3emeQuestions(): Question[] {
   // ═══════════════════════════════════════════════════════════
   const c1: [string, number, string][] = [
     ["3 km en m", 3000, "× 1000"], ["5 m en cm", 500, "× 100"],
-    ["2000 m en km", 2, "÷ 1000"], ["150 cm en m", 1.5, "÷ 100"],
-    ["4 kg en g", 4000, "× 1000"], ["500 g en kg", 0.5, "÷ 1000"],
-    ["2 L en mL", 2000, "× 1000"], ["3500 mL en L", 3.5, "÷ 1000"],
+    ["2000 m en km", 2, "÷ 1000"], ["150 cm en m (décimal)", 1.5, "÷ 100"],
+    ["4 kg en g", 4000, "× 1000"], ["500 g en kg (décimal)", 0.5, "÷ 1000"],
+    ["2 L en mL", 2000, "× 1000"], ["3500 mL en L (décimal)", 3.5, "÷ 1000"],
   ];
   c1.forEach(([t, r, h]) =>
     qs.push({ text: t, answer: String(r), category: "Conversions d'unités", hint: h })
@@ -545,12 +545,12 @@ export function get3emeQuestions(): Question[] {
   // ═══════════════════════════════════════════════════════════════════════
 
   // ── Brevet 2025 – Probabilités & Pourcentages ──────────────
-  qs.push({ text: "Urne de 40 boules : 20 vertes. Proba d'une verte ?", answer: "0.5", category: "Brevet – Probabilités", hint: "20/40 = 1/2" });
-  qs.push({ text: "Un article coûte 25 €. Prix après augmentation de 14 % ?", answer: "28.5", category: "Brevet – Pourcentages", hint: "25 × 1,14 = 28,5" });
+  qs.push({ text: "Urne de 40 boules : 20 vertes. Proba d'une verte ? (décimal)", answer: "0.5", category: "Brevet – Probabilités", hint: "20/40 = 1/2" });
+  qs.push({ text: "Un article coûte 25 €. Prix après augmentation de 14 % ? (en €)", answer: "28.5", category: "Brevet – Pourcentages", hint: "25 × 1,14 = 28,5" });
 
   // ── Brevet 2025 – Asie (QCM) ──────────────────────────────
-  qs.push({ text: "Urne : 4 bleues, 6 violettes, 7 rouges, 3 jaunes. Proba violette ?", answer: "0.3", category: "Brevet – Probabilités", hint: "6/20 = 3/10" });
-  qs.push({ text: "70 % d'une quantité revient à multiplier par ?", answer: "0.7", category: "Brevet – Pourcentages", hint: "70/100 = 0,70" });
+  qs.push({ text: "Urne : 4 bleues, 6 violettes, 7 rouges, 3 jaunes. Proba violette ? (décimal)", answer: "0.3", category: "Brevet – Probabilités", hint: "6/20 = 3/10" });
+  qs.push({ text: "70 % d'une quantité revient à multiplier par ? (décimal)", answer: "0.7", category: "Brevet – Pourcentages", hint: "70/100 = 0,70" });
   qs.push({ text: "Série : 7 ; 18 ; 12 ; 13 ; 15. Moyenne ?", answer: "13", category: "Brevet – Statistiques", hint: "(7+18+12+13+15)/5 = 65/5" });
 
   // ── Brevet 2025 – Centres étrangers (QCM) ──────────────────
@@ -569,7 +569,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "f(x) = 2x − 8. Résultat = 100. x = ?", answer: "54", category: "Brevet – Équations", hint: "2x − 8 = 100 → 2x = 108 → x = 54" });
 
   // Dé 12 faces
-  qs.push({ text: "Dé 12 faces. Proba d'un nombre pair ?", answer: "0.5", category: "Brevet – Probabilités", hint: "6 pairs sur 12" });
+  qs.push({ text: "Dé 12 faces. Proba d'un nombre pair ? (décimal)", answer: "0.5", category: "Brevet – Probabilités", hint: "6 pairs sur 12" });
 
   // ── Brevet 2025 – Polynésie septembre (QCM) ───────────────
   qs.push({ text: "Formule p = 1,5(L+1). Pour L = 25, p = ?", answer: "39", category: "Brevet – Substitution", hint: "1,5 × 26 = 39" });
@@ -578,7 +578,7 @@ export function get3emeQuestions(): Question[] {
   // ── Brevet 2025 – Métropole septembre (QCM) ───────────────
   qs.push({ text: "Étendue de 4 ; 8 ; 11 ; 7 ; 2 ; 3 ; 14 ?", answer: "12", category: "Brevet – Statistiques", hint: "14 − 2 = 12" });
   qs.push({ text: "1 L correspond à combien de dm³ ?", answer: "1", category: "Brevet – Conversions", hint: "1 L = 1 dm³" });
-  qs.push({ text: "8,6 × 10⁻⁴ en décimal = ?", answer: "0.00086", category: "Brevet – Notation scientifique", hint: "Déplacer la virgule de 4 rangs à gauche" });
+  qs.push({ text: "8,6 × 10⁻⁴ en décimal = ? (nombre décimal)", answer: "0.00086", category: "Brevet – Notation scientifique", hint: "Déplacer la virgule de 4 rangs à gauche" });
   qs.push({ text: "Drapeau ratio 3:2, longueur 90 cm. Largeur ?", answer: "60", category: "Brevet – Ratios", hint: "90 ÷ 3 × 2 = 60" });
   qs.push({ text: "Parfum passe de 75 € à 60 €. % de réduction ?", answer: "20", category: "Brevet – Pourcentages", hint: "(75−60)/75 × 100 = 20 %" });
   qs.push({ text: "4x² − 25 pour x = 3 ?", answer: "11", category: "Brevet – Identités remarquables", hint: "36 − 25 = 11" });
@@ -592,12 +592,12 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "f(x) = 3(x+1). f(2) = ?", answer: "9", category: "Brevet – Fonctions", hint: "3 × 3 = 9" });
 
   // Centres étrangers 2025 – exercice 2
-  qs.push({ text: "Masses de colis : 4, 9, 2, 7, 11 kg. Moyenne ?", answer: "6.6", category: "Brevet – Statistiques", hint: "(4+9+2+7+11)/5 = 33/5" });
+  qs.push({ text: "Masses de colis : 4, 9, 2, 7, 11 kg. Moyenne ? (décimal)", answer: "6.6", category: "Brevet – Statistiques", hint: "(4+9+2+7+11)/5 = 33/5" });
   qs.push({ text: "Masses : 4, 9, 2, 7, 11. Médiane ?", answer: "7", category: "Brevet – Statistiques", hint: "Ordonnées : 2,4,7,9,11 → 3e = 7" });
 
   // Centres étrangers 2025 – exercice 3
   qs.push({ text: "f(x) = −2x + 4, puis × 4. Pour x = 1 ?", answer: "8", category: "Brevet – Programme de calcul", hint: "(−2+4) × 4 = 2 × 4 = 8" });
-  qs.push({ text: "−8x + 16 = 4. x = ?", answer: "1.5", category: "Brevet – Équations", hint: "−8x = −12 → x = 1,5" });
+  qs.push({ text: "−8x + 16 = 4. x = ? (décimal)", answer: "1.5", category: "Brevet – Équations", hint: "−8x = −12 → x = 1,5" });
 
   // Polynésie juin 2025 – exercice 1
   qs.push({ text: "Effectifs : 1, 3, 8, 12, 4, 2. Total ?", answer: "30", category: "Brevet – Statistiques", hint: "1+3+8+12+4+2" });
@@ -610,11 +610,11 @@ export function get3emeQuestions(): Question[] {
   // Métropole 2025 – exercice 4
   qs.push({ text: "Choisir 10, −4, ×2, +8. Résultat ?", answer: "20", category: "Brevet – Programme de calcul", hint: "(10−4)×2+8 = 12+8" });
   qs.push({ text: "Choisir −7, −4, ×2, +8. Résultat ?", answer: "-14", category: "Brevet – Programme de calcul", hint: "(−7−4)×2+8 = −22+8" });
-  qs.push({ text: "20x + 50 = 75. x = ?", answer: "1.25", category: "Brevet – Équations", hint: "20x = 25 → x = 1,25" });
+  qs.push({ text: "20x + 50 = 75. x = ? (décimal)", answer: "1.25", category: "Brevet – Équations", hint: "20x = 25 → x = 1,25" });
 
   // Polynésie sept 2025 – exercice 1
   qs.push({ text: "f(x) = 80x. Antécédent de 2400 ?", answer: "30", category: "Brevet – Fonctions", hint: "2400 ÷ 80 = 30" });
-  qs.push({ text: "80x = 60x + 970. x = ?", answer: "48.5", category: "Brevet – Équations", hint: "20x = 970 → x = 48,5" });
+  qs.push({ text: "80x = 60x + 970. x = ? (décimal)", answer: "48.5", category: "Brevet – Équations", hint: "20x = 970 → x = 48,5" });
 
   // Polynésie sept 2025 – exercice 5
   qs.push({ text: "70 % de 20 tee-shirts ?", answer: "14", category: "Brevet – Pourcentages", hint: "20 × 0,7 = 14" });
@@ -630,7 +630,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "1600 sur 6400. Pourcentage ?", answer: "25", category: "Brevet – Pourcentages", hint: "1600/6400 × 100" });
 
   // Amérique du Sud nov 2025
-  qs.push({ text: "400 élèves sur 640 : pourcentage ?", answer: "62.5", category: "Brevet – Pourcentages", hint: "400/640 × 100 = 62,5 %" });
+  qs.push({ text: "400 élèves sur 640 : pourcentage ? (décimal)", answer: "62.5", category: "Brevet – Pourcentages", hint: "400/640 × 100 = 62,5 %" });
 
   // Nouvelle-Calédonie 2025
   qs.push({ text: "Quel nombre est premier : 687, 719, 935 ?", answer: "719", category: "Brevet – Arithmétique", hint: "687 = 3×229, 935 = 5×187, 719 est premier" });
@@ -640,7 +640,7 @@ export function get3emeQuestions(): Question[] {
   // ═══════════════════════════════════════════════════════════════
 
   // ── Amérique du Nord 2024 ────────────────────────────────
-  qs.push({ text: "Moyenne de 12, 15, 10, 7, 13 ?", answer: "11.4", category: "Brevet – Statistiques", hint: "(12+15+10+7+13)/5 = 57/5" });
+  qs.push({ text: "Moyenne de 12, 15, 10, 7, 13 ? (décimal)", answer: "11.4", category: "Brevet – Statistiques", hint: "(12+15+10+7+13)/5 = 57/5" });
   qs.push({ text: "Médiane de 7, 10, 12, 13, 15 ?", answer: "12", category: "Brevet – Statistiques", hint: "5 valeurs ordonnées → 3e" });
 
   // ── Centres étrangers 2024 (QCM) ────────────────────────
@@ -649,7 +649,7 @@ export function get3emeQuestions(): Question[] {
   // ── Asie 2024 (QCM) ───────────────────────────────────────
   qs.push({ text: "Lequel est premier : 1, 21, 37, 54 ?", answer: "37", category: "Brevet – Arithmétique", hint: "21 = 3×7, 54 = 2×27, 1 pas premier" });
   qs.push({ text: "4x² − 9 pour x = 2 ?", answer: "7", category: "Brevet – Identités remarquables", hint: "16 − 9 = 7" });
-  qs.push({ text: "Médiane de 3,4 ; 3,67 ; 4,1 ; 4,23 ; 4,5 ?", answer: "4.1", category: "Brevet – Statistiques", hint: "5 valeurs ordonnées → 3e" });
+  qs.push({ text: "Médiane de 3,4 ; 3,67 ; 4,1 ; 4,23 ; 4,5 ? (décimal)", answer: "4.1", category: "Brevet – Statistiques", hint: "5 valeurs ordonnées → 3e" });
 
   // ── Polynésie 2024 ──────────────────────────────────────
   qs.push({ text: "Cocktail ratio 10:6:2. Total 90 cL. Part du ratio 6 ?", answer: "30", category: "Brevet – Ratios", hint: "18 parts → 1 part = 5 cL. 6×5" });
@@ -662,7 +662,7 @@ export function get3emeQuestions(): Question[] {
   // ── Métropole juillet 2024 (QCM) ────────────────────────
   qs.push({ text: "f(x) = 3x − 2. f(−4) = ?", answer: "-14", category: "Brevet – Fonctions", hint: "3×(−4) − 2 = −12 − 2" });
   qs.push({ text: "(−5)³ = ?", answer: "-125", category: "Brevet – Puissances", hint: "(−5)×(−5)×(−5)" });
-  qs.push({ text: "Médiane : 1,46 ; 1,6 ; 1,65 ; 1,67 ; 1,7 ; 1,72 ; 1,75 ?", answer: "1.67", category: "Brevet – Statistiques", hint: "7 valeurs → 4e" });
+  qs.push({ text: "Médiane : 1,46 ; 1,6 ; 1,65 ; 1,67 ; 1,7 ; 1,72 ; 1,75 ? (décimal)", answer: "1.67", category: "Brevet – Statistiques", hint: "7 valeurs → 4e" });
 
   // PGCD – Métropole 2024
   qs.push({ text: "PGCD(330, 132) ?", answer: "66", category: "Brevet – PGCD", hint: "330 = 2×3×5×11, 132 = 2²×3×11 → 2×3×11" });
@@ -677,12 +677,12 @@ export function get3emeQuestions(): Question[] {
 
   // ── Polynésie septembre 2024 ───────────────────────────────
   qs.push({ text: "Écriture scientifique de 0,000 002 76. Exposant ?", answer: "-6", category: "Brevet – Notation scientifique", hint: "2,76 × 10⁻⁶" });
-  qs.push({ text: "(2x−7)(3x+1) = 0. Plus grande solution ?", answer: "3.5", category: "Brevet – Équations produit", hint: "2x−7 = 0 → x = 3,5" });
+  qs.push({ text: "(2x−7)(3x+1) = 0. Plus grande solution ? (décimal)", answer: "3.5", category: "Brevet – Équations produit", hint: "2x−7 = 0 → x = 3,5" });
   qs.push({ text: "f(x) = 5x² + 2. f(−3) = ?", answer: "47", category: "Brevet – Fonctions", hint: "5×9 + 2 = 47" });
 
   // ── Métropole septembre 2024 ───────────────────────────────
   qs.push({ text: "2² × 5 × 13 = ?", answer: "260", category: "Brevet – Arithmétique", hint: "4 × 5 × 13 = 260" });
-  qs.push({ text: "7x + 5 = 2x − 2. x = ?", answer: "-1.4", category: "Brevet – Équations", hint: "5x = −7 → x = −7/5" });
+  qs.push({ text: "7x + 5 = 2x − 2. x = ? (décimal)", answer: "-1.4", category: "Brevet – Équations", hint: "5x = −7 → x = −7/5 = −1,4" });
   qs.push({ text: "5 m/s en km/h ?", answer: "18", category: "Brevet – Conversions", hint: "5 × 3,6 = 18" });
 
   // Statistiques – Métropole sept 2024
@@ -693,7 +693,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "f(x) = (x+2)(x+8). Antécédent de 0 autre que −2 ?", answer: "-8", category: "Brevet – Équations produit", hint: "x + 8 = 0 → x = −8" });
 
   // ── Amérique du Sud décembre 2024 (QCM) ───────────────────
-  qs.push({ text: "Urne : 3 verts, 2 blancs. Proba blanc ?", answer: "0.4", category: "Brevet – Probabilités", hint: "2/5 = 0,4" });
+  qs.push({ text: "Urne : 3 verts, 2 blancs. Proba blanc ? (décimal)", answer: "0.4", category: "Brevet – Probabilités", hint: "2/5 = 0,4" });
   qs.push({ text: "f(x) = x² − x − 6. f(5) = ?", answer: "14", category: "Brevet – Fonctions", hint: "25 − 5 − 6 = 14" });
   qs.push({ text: "g(x) = −2x. Antécédent de 4 ?", answer: "-2", category: "Brevet – Fonctions", hint: "−2x = 4 → x = −2" });
   qs.push({ text: "f(x) = (x+2)(x−3). Plus grande solution de f(x) = 0 ?", answer: "3", category: "Brevet – Équations produit", hint: "x = −2 ou x = 3" });
@@ -708,18 +708,18 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "(x−2)(x+1) pour x = −3 ?", answer: "10", category: "Brevet – Programme de calcul", hint: "(−5)(−2) = 10" });
 
   // Proportionnalité – divers 2024
-  qs.push({ text: "Débit 14,1 m³/h × 2 h = ?", answer: "28.2", category: "Brevet – Proportionnalité", hint: "14,1 × 2" });
+  qs.push({ text: "Débit 14,1 m³/h × 2 h = ? (décimal)", answer: "28.2", category: "Brevet – Proportionnalité", hint: "14,1 × 2" });
 
   // 0,25x + 300 = 0,5x. x = ?
   qs.push({ text: "0,25x + 300 = 0,5x. x = ?", answer: "1200", category: "Brevet – Équations", hint: "0,25x = 300 → x = 1200" });
 
   // Musique – Métropole sept 2025
   qs.push({ text: "22 chansons : 9 chants, 6 comptines. Berceuses ?", answer: "7", category: "Brevet – Calcul", hint: "22 − 9 − 6 = 7" });
-  qs.push({ text: "55 min pour 22 chansons. Durée moyenne ?", answer: "2.5", category: "Brevet – Statistiques", hint: "55/22 = 2,5 min" });
+  qs.push({ text: "55 min pour 22 chansons. Durée moyenne ? (décimal, en min)", answer: "2.5", category: "Brevet – Statistiques", hint: "55/22 = 2,5 min" });
   qs.push({ text: "Nombres premiers entre 1 et 22 ? Combien ?", answer: "8", category: "Brevet – Arithmétique", hint: "2,3,5,7,11,13,17,19" });
 
   // Remise – Asie 2025
-  qs.push({ text: "Remise 15 % sur 55 € ?", answer: "46.75", category: "Brevet – Pourcentages", hint: "55 × 0,85 = 46,75" });
+  qs.push({ text: "Remise 15 % sur 55 €. Nouveau prix ? (décimal, en €)", answer: "46.75", category: "Brevet – Pourcentages", hint: "55 × 0,85 = 46,75" });
   qs.push({ text: "PGCD(350, 300) ?", answer: "50", category: "Brevet – PGCD", hint: "350 = 2×5²×7, 300 = 2²×3×5² → 2×5²" });
 
   // ═══════════════════════════════════════════════════════════
