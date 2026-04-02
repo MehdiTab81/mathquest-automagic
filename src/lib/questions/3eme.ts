@@ -424,11 +424,11 @@ export function get3emeQuestions(): Question[] {
   // Pb2 – Probabilités simples (réponses décimales propres)
   // ═══════════════════════════════════════════════════════════
   const pb2: [string, string, string][] = [
-    ["Proba pile avec une pièce", "0.5", "= 1/2"],
-    ["Proba pair sur un dé", "0.5", "= 3/6"],
-    ["Proba carte cœur (jeu de 32)", "0.25", "= 8/32"],
-    ["Proba boule rouge : 3 rouges sur 10", "0.3", "= 3/10"],
-    ["Proba boule bleue : 1 sur 4", "0.25", "= 1/4"],
+    ["Proba pile avec une pièce (décimal)", "0.5", "= 1/2 = 0,5"],
+    ["Proba pair sur un dé (décimal)", "0.5", "= 3/6 = 0,5"],
+    ["Proba carte cœur (jeu de 32) (décimal)", "0.25", "= 8/32 = 0,25"],
+    ["Proba boule rouge : 3 rouges sur 10 (décimal)", "0.3", "= 3/10 = 0,3"],
+    ["Proba boule bleue : 1 sur 4 (décimal)", "0.25", "= 1/4 = 0,25"],
   ];
   pb2.forEach(([t, r, h]) =>
     qs.push({ text: t, answer: r, category: "Probabilité simple", hint: h })
