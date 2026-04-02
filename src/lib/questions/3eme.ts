@@ -545,12 +545,12 @@ export function get3emeQuestions(): Question[] {
   // ═══════════════════════════════════════════════════════════════════════
 
   // ── Brevet 2025 – Probabilités & Pourcentages ──────────────
-  qs.push({ text: "Urne de 40 boules : 20 vertes. Proba d'une verte ?", answer: "0.5", category: "Brevet – Probabilités", hint: "20/40 = 1/2" });
-  qs.push({ text: "Un article coûte 25 €. Prix après augmentation de 14 % ?", answer: "28.5", category: "Brevet – Pourcentages", hint: "25 × 1,14 = 28,5" });
+  qs.push({ text: "Urne de 40 boules : 20 vertes. Proba d'une verte ? (décimal)", answer: "0.5", category: "Brevet – Probabilités", hint: "20/40 = 1/2" });
+  qs.push({ text: "Un article coûte 25 €. Prix après augmentation de 14 % ? (en €)", answer: "28.5", category: "Brevet – Pourcentages", hint: "25 × 1,14 = 28,5" });
 
   // ── Brevet 2025 – Asie (QCM) ──────────────────────────────
-  qs.push({ text: "Urne : 4 bleues, 6 violettes, 7 rouges, 3 jaunes. Proba violette ?", answer: "0.3", category: "Brevet – Probabilités", hint: "6/20 = 3/10" });
-  qs.push({ text: "70 % d'une quantité revient à multiplier par ?", answer: "0.7", category: "Brevet – Pourcentages", hint: "70/100 = 0,70" });
+  qs.push({ text: "Urne : 4 bleues, 6 violettes, 7 rouges, 3 jaunes. Proba violette ? (décimal)", answer: "0.3", category: "Brevet – Probabilités", hint: "6/20 = 3/10" });
+  qs.push({ text: "70 % d'une quantité revient à multiplier par ? (décimal)", answer: "0.7", category: "Brevet – Pourcentages", hint: "70/100 = 0,70" });
   qs.push({ text: "Série : 7 ; 18 ; 12 ; 13 ; 15. Moyenne ?", answer: "13", category: "Brevet – Statistiques", hint: "(7+18+12+13+15)/5 = 65/5" });
 
   // ── Brevet 2025 – Centres étrangers (QCM) ──────────────────
