@@ -715,7 +715,7 @@ export function get3emeQuestions(): Question[] {
 
   // Musique – Métropole sept 2025
   qs.push({ text: "22 chansons : 9 chants, 6 comptines. Berceuses ?", answer: "7", category: "Brevet – Calcul", hint: "22 − 9 − 6 = 7" });
-  qs.push({ text: "55 min pour 22 chansons. Durée moyenne ?", answer: "2.5", category: "Brevet – Statistiques", hint: "55/22 = 2,5 min" });
+  qs.push({ text: "55 min pour 22 chansons. Durée moyenne ? (décimal, en min)", answer: "2.5", category: "Brevet – Statistiques", hint: "55/22 = 2,5 min" });
   qs.push({ text: "Nombres premiers entre 1 et 22 ? Combien ?", answer: "8", category: "Brevet – Arithmétique", hint: "2,3,5,7,11,13,17,19" });
 
   // Remise – Asie 2025
