@@ -614,7 +614,7 @@ export function get3emeQuestions(): Question[] {
 
   // Polynésie sept 2025 – exercice 1
   qs.push({ text: "f(x) = 80x. Antécédent de 2400 ?", answer: "30", category: "Brevet – Fonctions", hint: "2400 ÷ 80 = 30" });
-  qs.push({ text: "80x = 60x + 970. x = ?", answer: "48.5", category: "Brevet – Équations", hint: "20x = 970 → x = 48,5" });
+  qs.push({ text: "80x = 60x + 970. x = ? (décimal)", answer: "48.5", category: "Brevet – Équations", hint: "20x = 970 → x = 48,5" });
 
   // Polynésie sept 2025 – exercice 5
   qs.push({ text: "70 % de 20 tee-shirts ?", answer: "14", category: "Brevet – Pourcentages", hint: "20 × 0,7 = 14" });
