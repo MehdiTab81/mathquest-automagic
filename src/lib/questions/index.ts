@@ -1,5 +1,5 @@
 export type { Question, Grade, ThemeId, ThemeConfig } from "./types";
-export { checkAnswer, THEMES, MELANGE_THEME, getThemeForCategory } from "./types";
+export { checkAnswer, seededShuffle, THEMES, MELANGE_THEME, getThemeForCategory } from "./types";
 import type { Question, Grade, ThemeId } from "./types";
 import { THEMES } from "./types";
 import { get3emeQuestions } from "./3eme";
