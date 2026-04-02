@@ -640,7 +640,7 @@ export function get3emeQuestions(): Question[] {
   // ═══════════════════════════════════════════════════════════════
 
   // ── Amérique du Nord 2024 ────────────────────────────────
-  qs.push({ text: "Moyenne de 12, 15, 10, 7, 13 ?", answer: "11.4", category: "Brevet – Statistiques", hint: "(12+15+10+7+13)/5 = 57/5" });
+  qs.push({ text: "Moyenne de 12, 15, 10, 7, 13 ? (décimal)", answer: "11.4", category: "Brevet – Statistiques", hint: "(12+15+10+7+13)/5 = 57/5" });
   qs.push({ text: "Médiane de 7, 10, 12, 13, 15 ?", answer: "12", category: "Brevet – Statistiques", hint: "5 valeurs ordonnées → 3e" });
 
   // ── Centres étrangers 2024 (QCM) ────────────────────────
