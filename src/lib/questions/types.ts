@@ -72,6 +72,21 @@ export function randInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/** Shuffle an array using a seed derived from a string (Fisher-Yates) */
+export function seededShuffle<T>(arr: T[], seed: string): T[] {
+  const out = [...arr];
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = ((h << 5) - h + seed.charCodeAt(i)) | 0;
+  }
+  for (let i = out.length - 1; i > 0; i--) {
+    h = (h * 1664525 + 1013904223) | 0;
+    const j = ((h >>> 0) % (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 export function checkAnswer(userAnswer: string, correctAnswer: string, isQcm = false): boolean {
   if (isQcm) {
     return userAnswer.trim() === correctAnswer.trim();

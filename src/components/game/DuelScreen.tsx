@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import { getDuelQuestion, checkAnswer } from "@/lib/questions";
+import { getDuelQuestion, checkAnswer, seededShuffle } from "@/lib/questions";
 import type { Question, Grade, ThemeId } from "@/lib/questions";
 
 interface DuelScreenProps {
@@ -183,7 +183,7 @@ const DuelScreen: React.FC<DuelScreenProps> = ({ grade, themeId, onBack }) => {
 
   const QcmOptions = ({ player }: { player: number }) => (
     <div className="grid grid-cols-2 gap-[3px] w-full" style={{ touchAction: "manipulation" }}>
-      {(question.options || []).map((opt, i) => (
+      {seededShuffle(question.options || [], question.text).map((opt, i) => (
         <button
           key={i}
           onPointerDown={(e) => {

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import Keypad from "./Keypad";
-import { checkAnswer } from "@/lib/questions";
+import { checkAnswer, seededShuffle } from "@/lib/questions";
 import type { Question } from "@/lib/questions";
 
 /** Renders fraction patterns like "3/4" as horizontal fraction bars */
@@ -87,11 +87,9 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
     onAnswer(false, elapsed, isQcm ? (selectedOption || "") : input);
   }, [onAnswer, startTime, input, isQcm, selectedOption]);
 
-  // Shuffle options deterministically based on question text
-  const shuffledOptions = question.options ? [...question.options].sort(() => {
-    // Use a simple hash of the question text for stable shuffling
-    return 0; // Keep original order — already randomized at question creation
-  }) : [];
+  const shuffledOptions = question.options
+    ? seededShuffle(question.options, question.text)
+    : [];
 
   return (
     <div className="animate-fade-in space-y-4">
