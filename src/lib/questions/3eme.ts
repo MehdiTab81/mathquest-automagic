@@ -693,7 +693,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "f(x) = (x+2)(x+8). Antécédent de 0 autre que −2 ?", answer: "-8", category: "Brevet – Équations produit", hint: "x + 8 = 0 → x = −8" });
 
   // ── Amérique du Sud décembre 2024 (QCM) ───────────────────
-  qs.push({ text: "Urne : 3 verts, 2 blancs. Proba blanc ?", answer: "0.4", category: "Brevet – Probabilités", hint: "2/5 = 0,4" });
+  qs.push({ text: "Urne : 3 verts, 2 blancs. Proba blanc ? (décimal)", answer: "0.4", category: "Brevet – Probabilités", hint: "2/5 = 0,4" });
   qs.push({ text: "f(x) = x² − x − 6. f(5) = ?", answer: "14", category: "Brevet – Fonctions", hint: "25 − 5 − 6 = 14" });
   qs.push({ text: "g(x) = −2x. Antécédent de 4 ?", answer: "-2", category: "Brevet – Fonctions", hint: "−2x = 4 → x = −2" });
   qs.push({ text: "f(x) = (x+2)(x−3). Plus grande solution de f(x) = 0 ?", answer: "3", category: "Brevet – Équations produit", hint: "x = −2 ou x = 3" });
