@@ -592,7 +592,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "f(x) = 3(x+1). f(2) = ?", answer: "9", category: "Brevet – Fonctions", hint: "3 × 3 = 9" });
 
   // Centres étrangers 2025 – exercice 2
-  qs.push({ text: "Masses de colis : 4, 9, 2, 7, 11 kg. Moyenne ?", answer: "6.6", category: "Brevet – Statistiques", hint: "(4+9+2+7+11)/5 = 33/5" });
+  qs.push({ text: "Masses de colis : 4, 9, 2, 7, 11 kg. Moyenne ? (décimal)", answer: "6.6", category: "Brevet – Statistiques", hint: "(4+9+2+7+11)/5 = 33/5" });
   qs.push({ text: "Masses : 4, 9, 2, 7, 11. Médiane ?", answer: "7", category: "Brevet – Statistiques", hint: "Ordonnées : 2,4,7,9,11 → 3e = 7" });
 
   // Centres étrangers 2025 – exercice 3
