@@ -597,7 +597,7 @@ export function get3emeQuestions(): Question[] {
 
   // Centres étrangers 2025 – exercice 3
   qs.push({ text: "f(x) = −2x + 4, puis × 4. Pour x = 1 ?", answer: "8", category: "Brevet – Programme de calcul", hint: "(−2+4) × 4 = 2 × 4 = 8" });
-  qs.push({ text: "−8x + 16 = 4. x = ?", answer: "1.5", category: "Brevet – Équations", hint: "−8x = −12 → x = 1,5" });
+  qs.push({ text: "−8x + 16 = 4. x = ? (décimal)", answer: "1.5", category: "Brevet – Équations", hint: "−8x = −12 → x = 1,5" });
 
   // Polynésie juin 2025 – exercice 1
   qs.push({ text: "Effectifs : 1, 3, 8, 12, 4, 2. Total ?", answer: "30", category: "Brevet – Statistiques", hint: "1+3+8+12+4+2" });
