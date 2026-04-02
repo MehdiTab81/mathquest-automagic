@@ -649,7 +649,7 @@ export function get3emeQuestions(): Question[] {
   // ── Asie 2024 (QCM) ───────────────────────────────────────
   qs.push({ text: "Lequel est premier : 1, 21, 37, 54 ?", answer: "37", category: "Brevet – Arithmétique", hint: "21 = 3×7, 54 = 2×27, 1 pas premier" });
   qs.push({ text: "4x² − 9 pour x = 2 ?", answer: "7", category: "Brevet – Identités remarquables", hint: "16 − 9 = 7" });
-  qs.push({ text: "Médiane de 3,4 ; 3,67 ; 4,1 ; 4,23 ; 4,5 ?", answer: "4.1", category: "Brevet – Statistiques", hint: "5 valeurs ordonnées → 3e" });
+  qs.push({ text: "Médiane de 3,4 ; 3,67 ; 4,1 ; 4,23 ; 4,5 ? (décimal)", answer: "4.1", category: "Brevet – Statistiques", hint: "5 valeurs ordonnées → 3e" });
 
   // ── Polynésie 2024 ──────────────────────────────────────
   qs.push({ text: "Cocktail ratio 10:6:2. Total 90 cL. Part du ratio 6 ?", answer: "30", category: "Brevet – Ratios", hint: "18 parts → 1 part = 5 cL. 6×5" });
