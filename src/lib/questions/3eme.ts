@@ -708,7 +708,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "(x−2)(x+1) pour x = −3 ?", answer: "10", category: "Brevet – Programme de calcul", hint: "(−5)(−2) = 10" });
 
   // Proportionnalité – divers 2024
-  qs.push({ text: "Débit 14,1 m³/h × 2 h = ?", answer: "28.2", category: "Brevet – Proportionnalité", hint: "14,1 × 2" });
+  qs.push({ text: "Débit 14,1 m³/h × 2 h = ? (décimal)", answer: "28.2", category: "Brevet – Proportionnalité", hint: "14,1 × 2" });
 
   // 0,25x + 300 = 0,5x. x = ?
   qs.push({ text: "0,25x + 300 = 0,5x. x = ?", answer: "1200", category: "Brevet – Équations", hint: "0,25x = 300 → x = 1200" });
