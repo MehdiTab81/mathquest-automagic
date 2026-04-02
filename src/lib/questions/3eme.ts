@@ -578,7 +578,7 @@ export function get3emeQuestions(): Question[] {
   // ── Brevet 2025 – Métropole septembre (QCM) ───────────────
   qs.push({ text: "Étendue de 4 ; 8 ; 11 ; 7 ; 2 ; 3 ; 14 ?", answer: "12", category: "Brevet – Statistiques", hint: "14 − 2 = 12" });
   qs.push({ text: "1 L correspond à combien de dm³ ?", answer: "1", category: "Brevet – Conversions", hint: "1 L = 1 dm³" });
-  qs.push({ text: "8,6 × 10⁻⁴ en décimal = ?", answer: "0.00086", category: "Brevet – Notation scientifique", hint: "Déplacer la virgule de 4 rangs à gauche" });
+  qs.push({ text: "8,6 × 10⁻⁴ en décimal = ? (nombre décimal)", answer: "0.00086", category: "Brevet – Notation scientifique", hint: "Déplacer la virgule de 4 rangs à gauche" });
   qs.push({ text: "Drapeau ratio 3:2, longueur 90 cm. Largeur ?", answer: "60", category: "Brevet – Ratios", hint: "90 ÷ 3 × 2 = 60" });
   qs.push({ text: "Parfum passe de 75 € à 60 €. % de réduction ?", answer: "20", category: "Brevet – Pourcentages", hint: "(75−60)/75 × 100 = 20 %" });
   qs.push({ text: "4x² − 25 pour x = 3 ?", answer: "11", category: "Brevet – Identités remarquables", hint: "36 − 25 = 11" });
