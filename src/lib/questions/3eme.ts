@@ -719,7 +719,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "Nombres premiers entre 1 et 22 ? Combien ?", answer: "8", category: "Brevet – Arithmétique", hint: "2,3,5,7,11,13,17,19" });
 
   // Remise – Asie 2025
-  qs.push({ text: "Remise 15 % sur 55 € ?", answer: "46.75", category: "Brevet – Pourcentages", hint: "55 × 0,85 = 46,75" });
+  qs.push({ text: "Remise 15 % sur 55 €. Nouveau prix ? (décimal, en €)", answer: "46.75", category: "Brevet – Pourcentages", hint: "55 × 0,85 = 46,75" });
   qs.push({ text: "PGCD(350, 300) ?", answer: "50", category: "Brevet – PGCD", hint: "350 = 2×5²×7, 300 = 2²×3×5² → 2×5²" });
 
   // ═══════════════════════════════════════════════════════════
