@@ -630,7 +630,7 @@ export function get3emeQuestions(): Question[] {
   qs.push({ text: "1600 sur 6400. Pourcentage ?", answer: "25", category: "Brevet – Pourcentages", hint: "1600/6400 × 100" });
 
   // Amérique du Sud nov 2025
-  qs.push({ text: "400 élèves sur 640 : pourcentage ?", answer: "62.5", category: "Brevet – Pourcentages", hint: "400/640 × 100 = 62,5 %" });
+  qs.push({ text: "400 élèves sur 640 : pourcentage ? (décimal)", answer: "62.5", category: "Brevet – Pourcentages", hint: "400/640 × 100 = 62,5 %" });
 
   // Nouvelle-Calédonie 2025
   qs.push({ text: "Quel nombre est premier : 687, 719, 935 ?", answer: "719", category: "Brevet – Arithmétique", hint: "687 = 3×229, 935 = 5×187, 719 est premier" });
