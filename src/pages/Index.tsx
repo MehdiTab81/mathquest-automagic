@@ -106,6 +106,9 @@ const Index: React.FC = () => {
     if (isCorrect) {
       setCorrect(prev => prev + 1);
       addXp(10);
+      clearMistake(q);
+    } else {
+      addMistake(q, grade);
     }
     recordAnswer(q.category, isCorrect);
     setTimes(prev => [...prev, timeMs]);
@@ -116,7 +119,7 @@ const Index: React.FC = () => {
     } else {
       setCurrentQ(prev => prev + 1);
     }
-  }, [currentQ, questions, addXp, recordAnswer]);
+  }, [currentQ, questions, addXp, recordAnswer, addMistake, clearMistake, grade]);
 
   const handleSkip = useCallback(() => {
     const q = questions[currentQ];
