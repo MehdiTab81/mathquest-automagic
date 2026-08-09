@@ -120,10 +120,28 @@ const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTr
         ))}
       </div>
 
+      {/* Remédiation ciblée */}
+      {mistakeCount > 0 && (
+        <button
+          onClick={onStartMistakes}
+          className="w-full bg-card border-2 border-destructive/40 rounded-xl p-4 text-left
+            transition-all duration-200 active:scale-[0.97] flex items-center gap-3"
+        >
+          <span className="text-3xl">🎯</span>
+          <div>
+            <div className="font-black text-base tracking-wide">MES ERREURS</div>
+            <div className="text-xs text-muted-foreground">
+              {mistakeCount} question{mistakeCount > 1 ? "s" : ""} à retravailler
+            </div>
+          </div>
+        </button>
+      )}
+
       {/* Theme title */}
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground text-center">
         Choisis un thème
       </p>
+
 
       {/* Theme grid */}
       <div className="grid grid-cols-2 gap-3">
