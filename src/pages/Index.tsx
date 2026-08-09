@@ -69,10 +69,10 @@ const Index: React.FC = () => {
   const startTraining = useCallback((selectedThemeId: ThemeId) => {
     setIsExam(false);
     setThemeId(selectedThemeId);
-    setQuestions(getRandomQuestions(20, grade, selectedThemeId));
+    setQuestions(getRandomQuestions(20, grade, selectedThemeId, { weakCategories }));
     resetQuiz();
     setScreen("quiz");
-  }, [grade]);
+  }, [grade, weakCategories]);
 
   const startExam = useCallback((selectedThemeId: ThemeId) => {
     setIsExam(true);
@@ -82,6 +82,7 @@ const Index: React.FC = () => {
     setTimerLeft(EXAM_DURATION_S);
     setScreen("quiz");
   }, [grade]);
+
 
   const startDuel = useCallback((selectedThemeId: ThemeId) => {
     setThemeId(selectedThemeId);
@@ -173,8 +174,11 @@ const Index: React.FC = () => {
             onStartExam={startExam}
             onStartDuel={startDuel}
             onStartBattle={startBattle}
+            mistakeCount={mistakes.filter(m => m.grade === grade).length}
+            onStartMistakes={startMistakes}
           />
         )}
+
 
         {screen === "quiz" && questions[currentQ] && (
           <QuizScreen
