@@ -9,9 +9,11 @@ interface MenuScreenProps {
   onStartExam: (themeId: ThemeId) => void;
   onStartDuel: (themeId: ThemeId) => void;
   onStartBattle: (themeId: ThemeId) => void;
+  mistakeCount: number;
+  onStartMistakes: () => void;
 }
 
-const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel, onStartBattle }) => {
+const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel, onStartBattle, mistakeCount, onStartMistakes }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeConfig | null>(null);
 
   const allThemes = [...THEMES, MELANGE_THEME];

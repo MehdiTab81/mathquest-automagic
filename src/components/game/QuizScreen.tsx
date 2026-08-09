@@ -132,8 +132,8 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ question, questionIndex, totalQ
           <p className="text-sm">
             Réponse : <strong className="font-mono text-base">{question.answer}</strong>
           </p>
-          {question.hint && (
-            <p className="text-xs text-muted-foreground mt-1">💡 {question.hint}</p>
+          {getExplanation(question) && (
+            <p className="text-xs text-muted-foreground mt-1">💡 {getExplanation(question)}</p>
           )}
           <button
             onPointerDown={(e) => { e.preventDefault(); handleNext(); }}
