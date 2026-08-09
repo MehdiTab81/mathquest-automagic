@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { THEMES, MELANGE_THEME, getThemeQuestionCount } from "@/lib/questions";
+import { THEMES, MELANGE_THEME, getThemeQuestionCount, GRADES, GRADE_LABELS } from "@/lib/questions";
 import type { Grade, ThemeId, ThemeConfig } from "@/lib/questions";
 
 interface MenuScreenProps {
@@ -103,17 +103,17 @@ const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTr
     <div className="animate-fade-in space-y-4">
       {/* Grade Selector */}
       <div className="flex gap-2 p-1 bg-card rounded-xl border border-foreground/5">
-        {(["4eme", "3eme"] as Grade[]).map(g => (
+        {GRADES.map((g: Grade) => (
           <button
             key={g}
             onClick={() => onGradeChange(g)}
-            className={`flex-1 py-3 rounded-lg font-black text-sm tracking-wide transition-all duration-200
+            className={`flex-1 py-3 rounded-lg font-black text-xs sm:text-sm tracking-wide transition-all duration-200
               ${grade === g
                 ? "bg-primary text-primary-foreground shadow-md"
                 : "text-muted-foreground hover:text-foreground"
               }`}
           >
-            {g === "4eme" ? "4ème" : "3ème"}
+            {GRADE_LABELS[g]}
           </button>
         ))}
       </div>
