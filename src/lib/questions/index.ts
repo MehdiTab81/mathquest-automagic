@@ -1,8 +1,9 @@
 export type { Question, Grade, ThemeId, ThemeConfig } from "./types";
-export { checkAnswer, seededShuffle, THEMES, MELANGE_THEME, getThemeForCategory } from "./types";
+export { checkAnswer, seededShuffle, THEMES, MELANGE_THEME, getThemeForCategory, GRADES, GRADE_LABELS } from "./types";
 import type { Question, Grade, ThemeId } from "./types";
 import { THEMES } from "./types";
 import { get3emeQuestions } from "./3eme";
+import { get5emeQuestions, get6emeQuestions } from "./grades";
 
 // Categories exclusive to 3ème (not studied in 4ème)
 const TROISIEME_ONLY_CATEGORIES = new Set([
@@ -43,6 +44,8 @@ function shuffleQuestions(questions: Question[]): Question[] {
 }
 
 function getAllQuestions(grade: Grade = "3eme"): Question[] {
+  if (grade === "6eme") return withQuestionIds(get6emeQuestions());
+  if (grade === "5eme") return withQuestionIds(get5emeQuestions());
   const all = withQuestionIds(get3emeQuestions());
   if (grade === "3eme") return all;
   return all.filter(q => !TROISIEME_ONLY_CATEGORIES.has(q.category) && !isBrevet(q.category));

@@ -6,7 +6,7 @@ import ResultsScreen from "@/components/game/ResultsScreen";
 import type { AnswerRecord } from "@/components/game/ResultsScreen";
 import DuelScreen from "@/components/game/DuelScreen";
 import BattleScreen from "@/components/game/BattleScreen";
-import { getRandomQuestions } from "@/lib/questions";
+import { getRandomQuestions, GRADE_LABELS } from "@/lib/questions";
 import type { Question, Grade, ThemeId } from "@/lib/questions";
 import { useProgress } from "@/hooks/useProgress";
 
@@ -145,7 +145,7 @@ const Index: React.FC = () => {
             <span className="text-game-teal">Quest</span>
           </h1>
           <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground mt-1 font-bold">
-            Automatismes · {grade === "4eme" ? "4ème" : "3ème"}
+            Automatismes · {GRADE_LABELS[grade]}
           </p>
         </header>
 
