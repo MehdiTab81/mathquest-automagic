@@ -26,7 +26,16 @@ const Index: React.FC = () => {
   const [isExam, setIsExam] = useState(false);
   const [timerLeft, setTimerLeft] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { level, xp, addXp, recordAnswer } = useProgress();
+  const { level, xp, addXp, recordAnswer, mistakes, addMistake, clearMistake, weakCategories } = useProgress();
+
+  const startMistakes = useCallback(() => {
+    const list = mistakes.filter(m => m.grade === grade).map(m => m.question);
+    if (list.length === 0) return;
+    setIsExam(false);
+    setQuestions(list.slice(0, 20));
+    resetQuiz();
+    setScreen("quiz");
+  }, [mistakes, grade]);
 
   useEffect(() => {
     if (screen === "quiz" && isExam && timerLeft > 0) {
