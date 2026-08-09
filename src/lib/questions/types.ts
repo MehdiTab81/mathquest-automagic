@@ -9,7 +9,16 @@ export interface Question {
 
 export type Grade = "6eme" | "5eme" | "4eme" | "3eme";
 
-export type ThemeId = "nombres" | "algebre" | "fonctions" | "proportionnalite" | "statistiques" | "brevet" | "melange";
+export const GRADES: Grade[] = ["6eme", "5eme", "4eme", "3eme"];
+
+export const GRADE_LABELS: Record<Grade, string> = {
+  "6eme": "6ème",
+  "5eme": "5ème",
+  "4eme": "4ème",
+  "3eme": "3ème",
+};
+
+export type ThemeId = "nombres" | "grandeurs" | "algebre" | "fonctions" | "proportionnalite" | "statistiques" | "brevet" | "melange";
 
 export interface ThemeConfig {
   id: ThemeId;
@@ -27,7 +36,14 @@ export const THEMES: ThemeConfig[] = [
     colorClass: "text-game-gold", borderClass: "border-game-gold", bgClass: "bg-game-gold",
     prefixes: ["Relatifs", "Fraction", "Quotients", "Add/sub frac", "Multiplier rat", "Diviser rat",
       "Écritures", "Puissances", "Notation sci", "Carrés", "Racines", "Encadrer", "Double,",
-      "Tables", "Priorités", "PGCD", "Double, triple"]
+      "Tables", "Priorités", "PGCD", "Double, triple",
+      "Additions", "Soustractions", "Doubles", "Moitiés", "×10", "Compléments",
+      "Triples", "Division simple", "Décimaux", "Nombres relatifs", "Produit de relatifs"]
+  },
+  {
+    id: "grandeurs", name: "Grandeurs & Mesures", emoji: "📏",
+    colorClass: "text-game-mint", borderClass: "border-game-mint", bgClass: "bg-game-mint",
+    prefixes: ["Périmètres", "Aires", "Angles"]
   },
   {
     id: "algebre", name: "Algèbre & Calcul littéral", emoji: "✏️",
