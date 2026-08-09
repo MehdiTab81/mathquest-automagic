@@ -26,7 +26,16 @@ const Index: React.FC = () => {
   const [isExam, setIsExam] = useState(false);
   const [timerLeft, setTimerLeft] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { level, xp, addXp, recordAnswer } = useProgress();
+  const { level, xp, addXp, recordAnswer, mistakes, addMistake, clearMistake, weakCategories } = useProgress();
+
+  const startMistakes = useCallback(() => {
+    const list = mistakes.filter(m => m.grade === grade).map(m => m.question);
+    if (list.length === 0) return;
+    setIsExam(false);
+    setQuestions(list.slice(0, 20));
+    resetQuiz();
+    setScreen("quiz");
+  }, [mistakes, grade]);
 
   useEffect(() => {
     if (screen === "quiz" && isExam && timerLeft > 0) {
@@ -60,10 +69,10 @@ const Index: React.FC = () => {
   const startTraining = useCallback((selectedThemeId: ThemeId) => {
     setIsExam(false);
     setThemeId(selectedThemeId);
-    setQuestions(getRandomQuestions(20, grade, selectedThemeId));
+    setQuestions(getRandomQuestions(20, grade, selectedThemeId, { weakCategories }));
     resetQuiz();
     setScreen("quiz");
-  }, [grade]);
+  }, [grade, weakCategories]);
 
   const startExam = useCallback((selectedThemeId: ThemeId) => {
     setIsExam(true);
@@ -73,6 +82,7 @@ const Index: React.FC = () => {
     setTimerLeft(EXAM_DURATION_S);
     setScreen("quiz");
   }, [grade]);
+
 
   const startDuel = useCallback((selectedThemeId: ThemeId) => {
     setThemeId(selectedThemeId);
@@ -96,6 +106,9 @@ const Index: React.FC = () => {
     if (isCorrect) {
       setCorrect(prev => prev + 1);
       addXp(10);
+      clearMistake(q);
+    } else {
+      addMistake(q, grade);
     }
     recordAnswer(q.category, isCorrect);
     setTimes(prev => [...prev, timeMs]);
@@ -106,7 +119,7 @@ const Index: React.FC = () => {
     } else {
       setCurrentQ(prev => prev + 1);
     }
-  }, [currentQ, questions, addXp, recordAnswer]);
+  }, [currentQ, questions, addXp, recordAnswer, addMistake, clearMistake, grade]);
 
   const handleSkip = useCallback(() => {
     const q = questions[currentQ];
@@ -117,6 +130,7 @@ const Index: React.FC = () => {
       timeMs: 0,
     }]);
     recordAnswer(q.category, false);
+    addMistake(q, grade);
     setTimes(prev => [...prev, 0]);
     if (currentQ + 1 >= questions.length) {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -124,7 +138,7 @@ const Index: React.FC = () => {
     } else {
       setCurrentQ(prev => prev + 1);
     }
-  }, [currentQ, questions, recordAnswer]);
+  }, [currentQ, questions, recordAnswer, addMistake, grade]);
 
   const goHome = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -164,8 +178,11 @@ const Index: React.FC = () => {
             onStartExam={startExam}
             onStartDuel={startDuel}
             onStartBattle={startBattle}
+            mistakeCount={mistakes.filter(m => m.grade === grade).length}
+            onStartMistakes={startMistakes}
           />
         )}
+
 
         {screen === "quiz" && questions[currentQ] && (
           <QuizScreen

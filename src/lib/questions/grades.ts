@@ -1,4 +1,5 @@
 import { Question, randInt } from "./types";
+import { get5emeProgramQuestions } from "./5eme";
 
 // ─── 6ÈME ──────────────────────────────────────────────────
 export function get6emeQuestions(): Question[] {
@@ -123,91 +124,8 @@ export function get5emeQuestions(): Question[] {
     qs.push({ text: String(t), answer: String(r), category: "Proportionnalité", hint: String(h) })
   );
 
-  return qs;
-}
-
-// ─── 4ÈME ──────────────────────────────────────────────────
-export function get4emeQuestions(): Question[] {
-  const qs = get5emeQuestions();
-
-  const relAdd = [
-    ["(−3) + 5", 2], ["(−7) + 2", -5], ["4 + (−9)", -5],
-    ["(−6) + (−3)", -9], ["8 + (−3)", 5], ["(−10) + 10", 0],
-    ["(−4) + 7", 3], ["(−8) + (−2)", -10],
-  ] as const;
-  relAdd.forEach(([t, r]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Nombres relatifs" })
-  );
-
-  const relSub = [
-    ["5 − 8", -3], ["3 − 10", -7], ["(−2) − 4", -6],
-    ["(−5) − (−3)", -2], ["7 − (−2)", 9], ["0 − 6", -6],
-    ["(−1) − (−1)", 0], ["(−3) − 7", -10],
-  ] as const;
-  relSub.forEach(([t, r]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Nombres relatifs" })
-  );
-
-  const relMul = [
-    ["(−3) × 4", -12], ["(−5) × (−2)", 10], ["7 × (−3)", -21],
-    ["(−6) × (−6)", 36], ["(−1) × 15", -15], ["(−4) × (−5)", 20],
-  ] as const;
-  relMul.forEach(([t, r]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Produit de relatifs" })
-  );
-
-  const puis = [
-    ["2³", 8], ["3²", 9], ["5²", 25], ["10³", 1000],
-    ["2⁴", 16], ["3³", 27], ["4²", 16], ["2⁵", 32],
-    ["10²", 100], ["7²", 49], ["6²", 36], ["10⁴", 10000],
-  ] as const;
-  puis.forEach(([t, r]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Puissances" })
-  );
-
-  const distrib = [
-    ["3 × (4 + 5)", 27, "= 3×4 + 3×5"], ["2 × (10 − 3)", 14, "= 2×10 − 2×3"],
-    ["5 × (6 + 2)", 40, "= 5×6 + 5×2"], ["4 × (7 − 1)", 24, "= 4×7 − 4×1"],
-    ["6 × (3 + 4)", 42, "= 6×3 + 6×4"], ["7 × (5 − 2)", 21, "= 7×5 − 7×2"],
-  ] as const;
-  distrib.forEach(([t, r, h]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Distributivité", hint: String(h) })
-  );
-
-  const pourc = [
-    ["10% de 200", 20], ["25% de 80", 20], ["50% de 60", 30],
-    ["20% de 150", 30], ["75% de 40", 30], ["10% de 350", 35],
-    ["5% de 200", 10], ["30% de 100", 30], ["15% de 200", 30],
-  ] as const;
-  pourc.forEach(([t, r]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Pourcentages" })
-  );
-
-  const fracAdd = [
-    ["1/4 + 2/4", "0.75", "= 3/4"], ["3/5 + 1/5", "0.8", "= 4/5"],
-    ["2/7 + 3/7", "0.714", "= 5/7"], ["1/3 + 1/3", "0.667", "= 2/3"],
-    ["5/8 + 1/8", "0.75", "= 6/8 = 3/4"],
-  ] as const;
-  fracAdd.forEach(([t, r, h]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Fractions", hint: String(h) })
-  );
-
-  const fracMul = [
-    ["1/2 × 1/3", "0.167", "= 1/6"], ["2/3 × 3/4", "0.5", "= 6/12 = 1/2"],
-    ["1/4 × 2/5", "0.1", "= 2/20 = 1/10"], ["3/5 × 5/6", "0.5", "= 15/30 = 1/2"],
-  ] as const;
-  fracMul.forEach(([t, r, h]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Fractions", hint: String(h) })
-  );
-
-  const angles = [
-    ["Complément de 30°", 60, "90 − 30"], ["Complément de 45°", 45, "90 − 45"],
-    ["Complément de 70°", 20, "90 − 70"], ["Supplément de 110°", 70, "180 − 110"],
-    ["Supplément de 60°", 120, "180 − 60"], ["Supplément de 90°", 90, "180 − 90"],
-  ] as const;
-  angles.forEach(([t, r, h]) =>
-    qs.push({ text: String(t), answer: String(r), category: "Angles", hint: String(h) })
-  );
+  // Programme officiel de 5ème (cycle 4)
+  qs.push(...get5emeProgramQuestions());
 
   return qs;
 }
