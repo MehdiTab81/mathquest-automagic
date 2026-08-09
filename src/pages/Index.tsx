@@ -130,6 +130,7 @@ const Index: React.FC = () => {
       timeMs: 0,
     }]);
     recordAnswer(q.category, false);
+    addMistake(q, grade);
     setTimes(prev => [...prev, 0]);
     if (currentQ + 1 >= questions.length) {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -137,7 +138,7 @@ const Index: React.FC = () => {
     } else {
       setCurrentQ(prev => prev + 1);
     }
-  }, [currentQ, questions, recordAnswer]);
+  }, [currentQ, questions, recordAnswer, addMistake, grade]);
 
   const goHome = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
