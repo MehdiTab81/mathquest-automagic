@@ -1,4 +1,5 @@
 import { Question, randInt } from "./types";
+import { get5emeProgramQuestions } from "./5eme";
 
 // ─── 6ÈME ──────────────────────────────────────────────────
 export function get6emeQuestions(): Question[] {
