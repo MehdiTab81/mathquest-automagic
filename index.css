@@ -1,0 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Valeurs par défaut (= 3ème) ; chaque niveau les redéfinit plus bas. */
+    --background: 10 35% 7%;
+    --foreground: 30 40% 96%;
+    --card: 12 28% 12%;
+    --card-foreground: 30 40% 96%;
+    --popover: 12 28% 12%;
+    --popover-foreground: 30 40% 96%;
+    --primary: 25 95% 58%;
+    --primary-foreground: 10 40% 8%;
+    --secondary: 45 95% 60%;
+    --secondary-foreground: 10 40% 8%;
+    --muted: 15 12% 40%;
+    --muted-foreground: 20 14% 66%;
+    --accent: 0 85% 66%;
+    --accent-foreground: 10 40% 8%;
+    --destructive: 0 75% 66%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 65% 52%;
+    --border: 0 0% 100% / 0.07;
+    --input: 0 0% 100% / 0.1;
+    --ring: 25 95% 58%;
+    --radius: 18px;
+    --glow-1: 25 95% 58%;
+    --glow-2: 45 95% 60%;
+
+    /* Couleurs des chapitres (communes à tous les niveaux) */
+    --game-gold: 44 92% 63%;
+    --game-teal: 174 58% 55%;
+    --game-coral: 0 100% 71%;
+    --game-purple: 250 95% 80%;
+    --game-pink: 340 82% 73%;
+    --game-mint: 160 85% 70%;
+
+    --sidebar-background: 240 33% 10%;
+    --sidebar-foreground: 220 60% 95%;
+    --sidebar-primary: 240 33% 8%;
+    --sidebar-primary-foreground: 220 60% 95%;
+    --sidebar-accent: 240 33% 16%;
+    --sidebar-accent-foreground: 220 60% 95%;
+    --sidebar-border: 0 0% 100% / 0.05;
+    --sidebar-ring: 250 95% 80%;
+  }
+
+  /* 🌲 6ème — La Forêt des Nombres */
+  :root[data-grade="6eme"] {
+    --background: 150 38% 6%;
+    --foreground: 120 30% 95%;
+    --card: 150 30% 11%;
+    --card-foreground: 120 30% 95%;
+    --popover: 150 30% 11%;
+    --primary: 135 62% 52%;
+    --primary-foreground: 150 45% 7%;
+    --secondary: 48 95% 62%;
+    --accent: 95 65% 68%;
+    --muted-foreground: 130 12% 66%;
+    --ring: 135 62% 52%;
+    --glow-1: 135 62% 45%;
+    --glow-2: 48 95% 55%;
+  }
+
+  /* 🌊 5ème — L'Océan des Calculs */
+  :root[data-grade="5eme"] {
+    --background: 214 55% 7%;
+    --foreground: 200 60% 96%;
+    --card: 212 42% 13%;
+    --card-foreground: 200 60% 96%;
+    --popover: 212 42% 13%;
+    --primary: 192 92% 55%;
+    --primary-foreground: 214 60% 8%;
+    --secondary: 168 72% 52%;
+    --accent: 222 92% 74%;
+    --muted-foreground: 205 18% 68%;
+    --ring: 192 92% 55%;
+    --glow-1: 192 92% 50%;
+    --glow-2: 222 92% 62%;
+  }
+
+  /* 🪐 4ème — Le Cosmos Algébrique */
+  :root[data-grade="4eme"] {
+    --background: 258 45% 7%;
+    --foreground: 260 60% 97%;
+    --card: 258 34% 14%;
+    --card-foreground: 260 60% 97%;
+    --popover: 258 34% 14%;
+    --primary: 266 92% 72%;
+    --primary-foreground: 258 50% 8%;
+    --secondary: 318 82% 70%;
+    --accent: 196 92% 68%;
+    --muted-foreground: 255 18% 70%;
+    --ring: 266 92% 72%;
+    --glow-1: 266 92% 60%;
+    --glow-2: 318 82% 60%;
+  }
+
+  /* 🌋 3ème — Le Volcan du Brevet */
+  :root[data-grade="3eme"] {
+    --background: 10 35% 7%;
+    --card: 12 28% 12%;
+    --primary: 25 95% 58%;
+    --secondary: 45 95% 60%;
+    --accent: 0 85% 66%;
+    --ring: 25 95% 58%;
+    --glow-1: 20 95% 50%;
+    --glow-2: 45 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html, body {
+    transition: background-color 0.6s ease, color 0.6s ease;
+  }
+  body {
+    @apply bg-background text-foreground font-nunito overflow-x-hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 15% -10%, hsl(var(--glow-1) / 0.22), transparent 60%),
+      radial-gradient(ellipse 70% 45% at 100% 110%, hsl(var(--glow-2) / 0.16), transparent 60%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  button:focus-visible, a:focus-visible, input:focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .font-mono-game { font-family: 'Space Mono', monospace; }
+  .font-display { font-family: 'Fredoka', 'Nunito', sans-serif; }
+  .text-game-gold { color: hsl(var(--game-gold)); }
+  .text-game-teal { color: hsl(var(--game-teal)); }
+  .text-game-coral { color: hsl(var(--game-coral)); }
+  .text-game-purple { color: hsl(var(--game-purple)); }
+  .text-game-pink { color: hsl(var(--game-pink)); }
+  .text-game-mint { color: hsl(var(--game-mint)); }
+  .bg-game-gold { background-color: hsl(var(--game-gold)); }
+  .bg-game-teal { background-color: hsl(var(--game-teal)); }
+  .bg-game-coral { background-color: hsl(var(--game-coral)); }
+  .bg-game-purple { background-color: hsl(var(--game-purple)); }
+  .bg-game-pink { background-color: hsl(var(--game-pink)); }
+  .bg-game-mint { background-color: hsl(var(--game-mint)); }
+  .text-gradient {
+    background: linear-gradient(100deg, hsl(var(--primary)), hsl(var(--secondary)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .glass {
+    background: hsl(var(--card) / 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .shadow-glow { box-shadow: 0 8px 30px -8px hsl(var(--primary) / 0.55); }
+  .pad-safe-bottom { padding-bottom: max(0.5rem, env(safe-area-inset-bottom)); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.35); }
+  50% { box-shadow: 0 0 22px 4px hsl(var(--primary) / 0.18); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-7px); }
+  40%, 80% { transform: translateX(7px); }
+}
+@keyframes flash-good {
+  0% { box-shadow: inset 0 0 0 0 hsl(var(--success) / 0); }
+  30% { box-shadow: inset 0 0 0 9999px hsl(var(--success) / 0.18); }
+  100% { box-shadow: inset 0 0 0 9999px hsl(var(--success) / 0); }
+}
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+  10% { opacity: var(--particle-opacity, 0.35); }
+  90% { opacity: var(--particle-opacity, 0.35); }
+  100% { transform: translate3d(var(--drift-x, 30px), -110vh, 0) rotate(240deg); opacity: 0; }
+}
+@keyframes countdown {
+  0% { opacity: 0; transform: scale(2.2); }
+  25% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; transform: scale(0.95); }
+  100% { opacity: 0; transform: scale(0.6); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-pop-in { animation: popIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-shake { animation: shake 0.4s ease; }
+.animate-flash-good { animation: flash-good 0.6s ease-out; }
+.animate-countdown { animation: countdown 0.95s ease-out both; }
+.animate-float { animation: float-y 3s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
