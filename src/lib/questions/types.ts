@@ -18,7 +18,7 @@ export const GRADE_LABELS: Record<Grade, string> = {
   "3eme": "3ème",
 };
 
-export type ThemeId = "nombres" | "grandeurs" | "algebre" | "fonctions" | "proportionnalite" | "statistiques" | "brevet" | "melange";
+export type ThemeId = "nombres" | "grandeurs" | "algebre" | "fonctions" | "proportionnalite" | "statistiques" | "brevet" | "melange" | (string & {});
 
 export interface ThemeConfig {
   id: ThemeId;
@@ -40,19 +40,19 @@ export const THEMES: ThemeConfig[] = [
       "Additions", "Soustractions", "Doubles", "Moitiés", "×10", "Compléments",
       "Triples", "Division simple", "Division euclidienne", "Divisibilité", "Décomposer",
       "Décimaux", "Nombres relatifs", "Produit de relatifs",
-      "Comparer", "Ranger", "Opposé", "Fractions égales", "Écriture mixte"]
+      "Comparer", "Ranger", "Multiples", "Termes", "Quotients à trou", "Opposé", "Fractions égales", "Écriture mixte"]
   },
   {
     id: "grandeurs", name: "Grandeurs & Mesures", emoji: "📏",
     colorClass: "text-game-mint", borderClass: "border-game-mint", bgClass: "bg-game-mint",
-    prefixes: ["Périmètres", "Aires", "Angles"]
+    prefixes: ["Périmètres", "Aires", "Angles", "Volumes", "Unités de volume"]
   },
   {
     id: "algebre", name: "Algèbre & Calcul littéral", emoji: "✏️",
     colorClass: "text-game-teal", borderClass: "border-game-teal", bgClass: "bg-game-teal",
     prefixes: ["Distributivité", "Double dist", "Identité", "Différence", "Programme de calcul",
       "Substitution", "Équation", "Calcul littéral", "Développer", "Factoriser", "Réduire", "Simplifier",
-      "Motifs", "Formules"]
+      "Motifs", "Formules", "Somme ou produit", "Égalité"]
   },
   {
     id: "fonctions", name: "Fonctions", emoji: "📈",

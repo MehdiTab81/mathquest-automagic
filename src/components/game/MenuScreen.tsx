@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { THEMES, MELANGE_THEME, getThemeQuestionCount, GRADES, GRADE_LABELS } from "@/lib/questions";
+import { getThemesForGrade, getThemeQuestionCount, GRADES, GRADE_LABELS } from "@/lib/questions";
 import type { Grade, ThemeId, ThemeConfig } from "@/lib/questions";
 
 interface MenuScreenProps {
@@ -16,7 +16,7 @@ interface MenuScreenProps {
 const MenuScreen: React.FC<MenuScreenProps> = ({ grade, onGradeChange, onStartTraining, onStartExam, onStartDuel, onStartBattle, mistakeCount, onStartMistakes }) => {
   const [selectedTheme, setSelectedTheme] = useState<ThemeConfig | null>(null);
 
-  const allThemes = [...THEMES, MELANGE_THEME];
+  const allThemes = getThemesForGrade(grade);
 
   // Filter out themes with 0 questions for current grade
   const availableThemes = allThemes.filter(t => getThemeQuestionCount(t.id, grade) > 0);
