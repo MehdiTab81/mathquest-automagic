@@ -4,6 +4,15 @@ import type { Question, Grade, ThemeId } from "./types";
 import { THEMES } from "./types";
 import { get3emeQuestions } from "./3eme";
 import { get5emeQuestions, get6emeQuestions } from "./grades";
+import { CHAPTERS_5EME, ENTRETIEN_5EME } from "./5eme";
+import { MELANGE_THEME } from "./types";
+import type { ThemeConfig } from "./types";
+
+export function getThemesForGrade(grade: Grade): ThemeConfig[] {
+  if (grade === "5eme") return [...CHAPTERS_5EME, ENTRETIEN_5EME, MELANGE_THEME];
+  return [...THEMES, MELANGE_THEME];
+}
+
 
 // Categories exclusive to 3ème (not studied in 4ème).
 // Racine carrée, puissances négatives, notation scientifique et probabilités
@@ -66,7 +75,11 @@ function getAllQuestions(grade: Grade = "3eme"): Question[] {
 
 function getQuestionsByTheme(themeId: ThemeId, grade: Grade = "3eme"): Question[] {
   if (themeId === "melange") return getAllQuestions(grade);
-  const theme = THEMES.find(t => t.id === themeId);
+  if (themeId === ENTRETIEN_5EME.id) {
+    const all = CHAPTERS_5EME.flatMap(c => c.prefixes);
+    return getAllQuestions(grade).filter(q => !all.some(p => q.category.startsWith(p)));
+  }
+  const theme = [...THEMES, ...CHAPTERS_5EME].find(t => t.id === themeId);
   if (!theme) return getAllQuestions(grade);
   return getAllQuestions(grade).filter(q =>
     theme.prefixes.some(p => q.category.startsWith(p))
